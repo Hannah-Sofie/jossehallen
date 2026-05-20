@@ -19,21 +19,21 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2"
+          className="flex items-center gap-3"
           onClick={() => setOpen(false)}
         >
           <Image
             src="/logo.png"
             alt="Jossehallen"
-            width={40}
-            height={40}
+            width={64}
+            height={64}
             priority
-            className="h-9 w-9"
+            className="h-14 w-14"
           />
-          <span className="font-brand text-lg font-extrabold tracking-wide">
+          <span className="font-brand text-xl font-extrabold tracking-wide">
             JOSSEHALLEN
           </span>
         </Link>

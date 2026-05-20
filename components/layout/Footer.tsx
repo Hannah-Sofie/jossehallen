@@ -9,15 +9,15 @@ export function Footer() {
     <footer className="border-t bg-muted/30">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-3">
             <Image
               src="/logo.png"
               alt="Jossehallen"
-              width={32}
-              height={32}
-              className="h-8 w-8"
+              width={48}
+              height={48}
+              className="h-12 w-12"
             />
-            <span className="font-brand text-base font-extrabold tracking-wide">
+            <span className="font-brand text-lg font-extrabold tracking-wide">
               JOSSEHALLEN
             </span>
           </Link>
