@@ -10,14 +10,14 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 md:py-32">
           <div className="max-w-2xl">
             <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Innendørs hundehall
+              Innendørs hundehall i Moelv
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
               Trening, kurs og lek <span className="text-muted-foreground">— hele året.</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground">
-              Velkommen til Jossehallen. Vi tilbyr kurs for hunder og eiere i alle aldre,
-              og du kan leie hallen til egen trening.
+              Jossehallen tilbyr kurs for hund og eier, samt utleie av hallen til
+              egen trening. Velkommen innom.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/kurs" className={buttonVariants({ size: "lg" })}>
@@ -37,10 +37,10 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Hva tilbyr vi?
+            Hva vi tilbyr
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Et trygt, tørt og opplyst sted for å trene og leke med hunden din.
+            Et trygt, tørt og opplyst sted for trening, kurs og lek — uansett vær.
           </p>
         </div>
 
@@ -50,7 +50,8 @@ export default function Home() {
               <GraduationCap className="h-8 w-8" aria-hidden />
               <CardTitle className="mt-3">Kurs</CardTitle>
               <CardDescription>
-                Hverdagslydighet, valpekurs, agility og mer. Små grupper med erfarne instruktører.
+                Hverdagslydighet, valpekurs, agility og mer. Små grupper med
+                erfarne instruktører.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -68,8 +69,8 @@ export default function Home() {
               <CalendarDays className="h-8 w-8" aria-hidden />
               <CardTitle className="mt-3">Leie hall</CardTitle>
               <CardDescription>
-                Lei hallen til egen trening, lek eller for klubben din. Reserver en time
-                som passer.
+                Hallen kan leies til egen trening, lek eller klubbaktivitet.
+                Reserver en ledig tid som passer.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -87,7 +88,8 @@ export default function Home() {
               <Dumbbell className="h-8 w-8" aria-hidden />
               <CardTitle className="mt-3">Trening</CardTitle>
               <CardDescription>
-                Velutstyrt hall med hindringsbane, mykt underlag og god plass — uansett vær.
+                Velutstyrt hall med hindringsbane, mykt underlag og god plass
+                — uansett årstid.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -110,14 +112,18 @@ export default function Home() {
                 Om Jossehallen
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Jossehallen er en innendørs hundehall som drives av lokale entusiaster.
-                Vi er et samlingssted for kurs, trening og hyggelig lek — uavhengig av
-                vær og årstid.
+                Jossehallen er en innendørs hundehall som drives av lokale
+                entusiaster i Moelv. Hallen er et samlingssted for kurs,
+                trening og hyggelig lek — uavhengig av vær og årstid.
               </p>
               <p className="mt-4 text-muted-foreground">
-                Har du spørsmål? Send oss en melding på{" "}
-                <Link href="/kontakt" className="font-medium text-foreground hover:underline">
-                  kontakt-siden
+                For spørsmål om kurs, leie eller hallen generelt, ta gjerne
+                kontakt via{" "}
+                <Link
+                  href="/kontakt"
+                  className="font-medium text-foreground hover:underline"
+                >
+                  kontaktsiden
                 </Link>
                 .
               </p>

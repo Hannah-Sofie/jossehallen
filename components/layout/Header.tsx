@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, PawPrint } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -21,11 +22,20 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 font-semibold tracking-tight"
+          className="flex items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <PawPrint className="h-6 w-6" aria-hidden />
-          <span>Jossehallen</span>
+          <Image
+            src="/logo.png"
+            alt="Jossehallen"
+            width={40}
+            height={40}
+            priority
+            className="h-9 w-9"
+          />
+          <span className="font-brand text-lg font-extrabold tracking-wide">
+            JOSSEHALLEN
+          </span>
         </Link>
 
         <nav className="hidden md:flex md:items-center md:gap-6">

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin, PawPrint } from "lucide-react";
+import Image from "next/image";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -8,12 +9,20 @@ export function Footer() {
     <footer className="border-t bg-muted/30">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <PawPrint className="h-5 w-5" aria-hidden />
-            Jossehallen
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="Jossehallen"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="font-brand text-base font-extrabold tracking-wide">
+              JOSSEHALLEN
+            </span>
           </Link>
           <p className="mt-3 text-sm text-muted-foreground">
-            Innendørs hundehall for kurs, trening og leie.
+            Innendørs hundehall i Moelv. Kurs, trening og utleie.
           </p>
         </div>
 
