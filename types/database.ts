@@ -80,6 +80,12 @@ export type Booking = {
   opprettet: string;
 };
 
+/** Fra view `kurs_offentlig` — kurs + aggregerte plass-tellinger, trygt for anon. */
+export type KursOffentlig = Kurs & {
+  antall_aktive: number;
+  ledige_plasser: number;
+};
+
 type InsertOf<T, Optional extends keyof T> = Omit<T, Optional> &
   Partial<Pick<T, Optional>>;
 
@@ -90,6 +96,7 @@ export type Database = {
         Row: Instruktor;
         Insert: InsertOf<Instruktor, "id" | "opprettet" | "bio" | "bilde_url">;
         Update: Partial<Omit<Instruktor, "id">>;
+        Relationships: [];
       };
       kurs: {
         Row: Kurs;
@@ -111,6 +118,7 @@ export type Database = {
           | "beskrivelse"
         >;
         Update: Partial<Omit<Kurs, "id">>;
+        Relationships: [];
       };
       kurspaameldinger: {
         Row: Kurspaamelding;
@@ -130,11 +138,13 @@ export type Database = {
           | "vilkar_godtatt_dato"
         >;
         Update: Partial<Omit<Kurspaamelding, "id">>;
+        Relationships: [];
       };
       tilgjengelige_tider: {
         Row: TilgjengeligTid;
         Insert: InsertOf<TilgjengeligTid, "id" | "opprettet" | "ledig">;
         Update: Partial<Omit<TilgjengeligTid, "id">>;
+        Relationships: [];
       };
       bookinger: {
         Row: Booking;
@@ -143,11 +153,20 @@ export type Database = {
           "id" | "opprettet" | "status" | "formaal"
         >;
         Update: Partial<Omit<Booking, "id">>;
+        Relationships: [];
       };
     };
+    Views: {
+      kurs_offentlig: {
+        Row: KursOffentlig;
+        Relationships: [];
+      };
+    };
+    Functions: Record<string, never>;
     Enums: {
       paamelding_status: PaameldingStatus;
       booking_status: BookingStatus;
     };
+    CompositeTypes: Record<string, never>;
   };
 };

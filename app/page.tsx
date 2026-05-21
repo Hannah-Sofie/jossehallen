@@ -2,8 +2,12 @@ import Link from "next/link";
 import { GraduationCap, CalendarDays, Dumbbell, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { hentAktiveKurs } from "@/lib/kurs";
+import { KursKort } from "@/components/kurs/KursKort";
 
-export default function Home() {
+export default async function Home() {
+  const kommendeKurs = (await hentAktiveKurs()).slice(0, 3);
+
   return (
     <>
       <section className="relative overflow-hidden border-b bg-gradient-to-b from-muted/50 to-background">
@@ -104,7 +108,43 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t bg-muted/30">
+      {kommendeKurs.length > 0 ? (
+        <section className="border-t bg-muted/30">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Kommende kurs
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Meld deg på et av våre kurs.
+                </p>
+              </div>
+              <Link
+                href="/kurs"
+                className="hidden shrink-0 items-center text-sm font-medium hover:underline sm:inline-flex"
+              >
+                Se alle kurs <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {kommendeKurs.map((k) => (
+                <KursKort key={k.id} kurs={k} />
+              ))}
+            </div>
+            <div className="mt-8 text-center sm:hidden">
+              <Link
+                href="/kurs"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Se alle kurs
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="border-t">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div>
