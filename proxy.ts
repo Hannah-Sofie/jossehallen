@@ -27,7 +27,30 @@ export async function proxy(request: NextRequest) {
   );
 
   // Refresh session — må kalles for at auth-cookies skal holde seg friske.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // /admin/* (unntatt selve login-siden) krever innlogging.
+  // Fin-kornet rollesjekk skjer i app/admin/layout.tsx.
+  const erAdminRute =
+    pathname.startsWith("/admin") && pathname !== "/admin/login";
+  if (erAdminRute && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/admin/login";
+    url.searchParams.set("retur", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // /min-side/* krever innlogging.
+  if (pathname.startsWith("/min-side") && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("retur", pathname);
+    return NextResponse.redirect(url);
+  }
 
   return response;
 }

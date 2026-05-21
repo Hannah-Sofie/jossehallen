@@ -98,9 +98,62 @@ create index if not exists bookinger_tid_idx    on bookinger (tid_id);
 create index if not exists bookinger_status_idx on bookinger (status);
 
 -- =========================================================================
+-- Auth + roller: brukerprofil, auto-opprett-trigger, rolle-helpers
+-- =========================================================================
+
+do $$ begin
+  create type brukerrolle as enum ('bruker', 'instruktor', 'admin');
+exception when duplicate_object then null; end $$;
+
+create table if not exists brukerprofil (
+  bruker_id  uuid        primary key references auth.users(id) on delete cascade,
+  rolle      brukerrolle not null default 'bruker',
+  fornavn    text        not null default '',
+  etternavn  text        not null default '',
+  telefon    text        not null default '',
+  adresse    text        not null default '',
+  postnummer text        not null default '',
+  poststed   text        not null default '',
+  opprettet  timestamptz not null default now(),
+  oppdatert  timestamptz not null default now()
+);
+
+create or replace function handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.brukerprofil (bruker_id, fornavn, etternavn, telefon, adresse, postnummer, poststed)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'fornavn', ''),
+    coalesce(new.raw_user_meta_data->>'etternavn', ''),
+    coalesce(new.raw_user_meta_data->>'telefon', ''),
+    coalesce(new.raw_user_meta_data->>'adresse', ''),
+    coalesce(new.raw_user_meta_data->>'postnummer', ''),
+    coalesce(new.raw_user_meta_data->>'poststed', '')
+  )
+  on conflict (bruker_id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users for each row execute function handle_new_user();
+
+create or replace function is_admin()
+returns boolean language sql security definer set search_path = public stable as $$
+  select exists (select 1 from brukerprofil where bruker_id = auth.uid() and rolle = 'admin');
+$$;
+
+create or replace function is_admin_or_instruktor()
+returns boolean language sql security definer set search_path = public stable as $$
+  select exists (select 1 from brukerprofil where bruker_id = auth.uid() and rolle in ('admin', 'instruktor'));
+$$;
+
+-- =========================================================================
 -- Row Level Security
--- Anon kan: se aktive kurs/tider/instruktorer, melde seg på kurs, booke tid.
--- Authenticated (= admin) kan: alt.
+-- Anon: se aktive kurs/tider/instruktorer, melde på kurs, booke tid.
+-- bruker: se/endre egen profil. instruktør: kurs+påmeldinger. admin: alt.
 -- =========================================================================
 
 alter table instruktorer          enable row level security;
@@ -108,31 +161,39 @@ alter table kurs                  enable row level security;
 alter table kurspaameldinger      enable row level security;
 alter table tilgjengelige_tider   enable row level security;
 alter table bookinger             enable row level security;
+alter table brukerprofil          enable row level security;
 
 drop policy if exists "instruktorer_select_alle" on instruktorer;
 drop policy if exists "instruktorer_admin_all"   on instruktorer;
 create policy "instruktorer_select_alle" on instruktorer for select to anon, authenticated using (true);
-create policy "instruktorer_admin_all"   on instruktorer for all    to authenticated using (true) with check (true);
+create policy "instruktorer_admin_all"   on instruktorer for all    to authenticated using (is_admin()) with check (is_admin());
 
 drop policy if exists "kurs_select_alle" on kurs;
 drop policy if exists "kurs_admin_all"   on kurs;
 create policy "kurs_select_alle" on kurs for select to anon, authenticated using (true);
-create policy "kurs_admin_all"   on kurs for all    to authenticated using (true) with check (true);
+create policy "kurs_admin_all"   on kurs for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
 
 drop policy if exists "paameldinger_insert_alle" on kurspaameldinger;
 drop policy if exists "paameldinger_admin_all"   on kurspaameldinger;
 create policy "paameldinger_insert_alle" on kurspaameldinger for insert to anon, authenticated with check (true);
-create policy "paameldinger_admin_all"   on kurspaameldinger for all    to authenticated using (true) with check (true);
+create policy "paameldinger_admin_all"   on kurspaameldinger for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
 
 drop policy if exists "tider_select_alle" on tilgjengelige_tider;
 drop policy if exists "tider_admin_all"   on tilgjengelige_tider;
 create policy "tider_select_alle" on tilgjengelige_tider for select to anon, authenticated using (true);
-create policy "tider_admin_all"   on tilgjengelige_tider for all    to authenticated using (true) with check (true);
+create policy "tider_admin_all"   on tilgjengelige_tider for all    to authenticated using (is_admin()) with check (is_admin());
 
 drop policy if exists "bookinger_insert_alle" on bookinger;
 drop policy if exists "bookinger_admin_all"   on bookinger;
 create policy "bookinger_insert_alle" on bookinger for insert to anon, authenticated with check (true);
-create policy "bookinger_admin_all"   on bookinger for all    to authenticated using (true) with check (true);
+create policy "bookinger_admin_all"   on bookinger for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
+
+drop policy if exists "profil_egen_select" on brukerprofil;
+drop policy if exists "profil_egen_update" on brukerprofil;
+drop policy if exists "profil_admin_all"   on brukerprofil;
+create policy "profil_egen_select" on brukerprofil for select to authenticated using (bruker_id = auth.uid() or is_admin());
+create policy "profil_egen_update" on brukerprofil for update to authenticated using (bruker_id = auth.uid()) with check (bruker_id = auth.uid());
+create policy "profil_admin_all"   on brukerprofil for all    to authenticated using (is_admin()) with check (is_admin());
 
 -- =========================================================================
 -- View: kurs + antall ledige plasser (uten å lekke persondata til anon)

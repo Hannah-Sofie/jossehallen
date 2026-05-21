@@ -4,6 +4,7 @@
  *   npx supabase gen types typescript --project-id <id> > types/database.ts
  */
 
+export type Brukerrolle = "bruker" | "instruktor" | "admin";
 export type Nivaa = "nybegynner" | "viderekomne" | "avansert" | "alle";
 export type PaameldingStatus =
   | "venter_betaling"
@@ -18,6 +19,19 @@ export type Instruktor = {
   bio: string;
   bilde_url: string | null;
   opprettet: string;
+};
+
+export type Brukerprofil = {
+  bruker_id: string;
+  rolle: Brukerrolle;
+  fornavn: string;
+  etternavn: string;
+  telefon: string;
+  adresse: string;
+  postnummer: string;
+  poststed: string;
+  opprettet: string;
+  oppdatert: string;
 };
 
 export type Kurs = {
@@ -98,6 +112,23 @@ export type Database = {
         Update: Partial<Omit<Instruktor, "id">>;
         Relationships: [];
       };
+      brukerprofil: {
+        Row: Brukerprofil;
+        Insert: InsertOf<
+          Brukerprofil,
+          | "rolle"
+          | "fornavn"
+          | "etternavn"
+          | "telefon"
+          | "adresse"
+          | "postnummer"
+          | "poststed"
+          | "opprettet"
+          | "oppdatert"
+        >;
+        Update: Partial<Omit<Brukerprofil, "bruker_id">>;
+        Relationships: [];
+      };
       kurs: {
         Row: Kurs;
         Insert: InsertOf<
@@ -164,6 +195,7 @@ export type Database = {
     };
     Functions: Record<string, never>;
     Enums: {
+      brukerrolle: Brukerrolle;
       paamelding_status: PaameldingStatus;
       booking_status: BookingStatus;
     };
