@@ -4,8 +4,14 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, Tag, Users, GraduationCap } from "lucide-react";
 
-import { hentKurs, hentInstruktor, plassStatus, nivaaLabel } from "@/lib/kurs";
-import { formatPeriode, formatPris } from "@/lib/format";
+import {
+  hentKurs,
+  hentInstruktor,
+  hentKursOekter,
+  plassStatus,
+  nivaaLabel,
+} from "@/lib/kurs";
+import { formatPeriode, formatPris, formatDato } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PameldingDialog } from "@/components/kurs/PameldingDialog";
@@ -27,7 +33,10 @@ export default async function KursDetalj({ params }: Params) {
   const kurs = await hentKurs(id);
   if (!kurs || !kurs.aktiv) notFound();
 
-  const instruktor = await hentInstruktor(kurs.instruktor_id);
+  const [instruktor, oekter] = await Promise.all([
+    hentInstruktor(kurs.instruktor_id),
+    hentKursOekter(kurs.id),
+  ]);
   const status = plassStatus(kurs.ledige_plasser);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -153,6 +162,19 @@ export default async function KursDetalj({ params }: Params) {
       {kurs.ta_med ? (
         <Seksjon tittel="Ta med">
           <p className="whitespace-pre-line">{kurs.ta_med}</p>
+        </Seksjon>
+      ) : null}
+
+      {oekter.length > 0 ? (
+        <Seksjon tittel={`Datoer (${oekter.length} ${oekter.length === 1 ? "økt" : "økter"})`}>
+          <ul className="space-y-1">
+            {oekter.map((o) => (
+              <li key={o.id}>
+                {formatDato(o.dato)} · {o.start_tid.slice(0, 5)}–
+                {o.slutt_tid.slice(0, 5)}
+              </li>
+            ))}
+          </ul>
         </Seksjon>
       ) : null}
 

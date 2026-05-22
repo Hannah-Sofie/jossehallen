@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import type { KursOffentlig, Instruktor, Nivaa } from "@/types/database";
+import type {
+  KursOffentlig,
+  Instruktor,
+  Nivaa,
+  KursOekt,
+} from "@/types/database";
 
 /** Aktive kurs sortert etter startdato, med ledige plasser. */
 export async function hentAktiveKurs(): Promise<KursOffentlig[]> {
@@ -37,6 +42,19 @@ export async function hentInstruktor(
     .maybeSingle();
   if (error) return null;
   return data;
+}
+
+/** Planlagte økter for et kurs (offentlig — RLS tillater select). */
+export async function hentKursOekter(kursId: string): Promise<KursOekt[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("kurs_oekter")
+    .select("*")
+    .eq("kurs_id", kursId)
+    .eq("status", "planlagt")
+    .order("dato", { ascending: true })
+    .order("start_tid", { ascending: true });
+  return data ?? [];
 }
 
 export type PlassStatus = {

@@ -66,14 +66,26 @@ export default async function LeiePage() {
                 {formatDatoLang(dag.dato)}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2">
-                {dag.tider.map((t) => {
-                  const label = `${t.start_tid.slice(0, 5)}–${t.slutt_tid.slice(0, 5)}`;
+                {dag.slots.map((s) => {
+                  const label = `${s.start_tid.slice(0, 5)}–${s.slutt_tid.slice(0, 5)}`;
                   const fullLabel = `${formatDatoLang(dag.dato)}, kl ${label}`;
 
-                  if (!t.ledig) {
+                  if (s.type === "kurs") {
                     return (
                       <span
-                        key={t.id}
+                        key={s.id}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-muted-foreground"
+                        title={`Opptatt: ${s.kursNavn}`}
+                      >
+                        {label} · {s.kursNavn}
+                      </span>
+                    );
+                  }
+
+                  if (s.type === "booket") {
+                    return (
+                      <span
+                        key={s.id}
                         className="inline-flex items-center rounded-md border border-dashed px-3 py-2 text-sm text-muted-foreground line-through"
                       >
                         {label}
@@ -84,7 +96,7 @@ export default async function LeiePage() {
                   if (!profil) {
                     return (
                       <Link
-                        key={t.id}
+                        key={s.id}
                         href="/login?retur=/leie"
                         className={buttonVariants({ variant: "outline", size: "sm" })}
                       >
@@ -95,8 +107,8 @@ export default async function LeiePage() {
 
                   return (
                     <BookingDialog
-                      key={t.id}
-                      tidId={t.id}
+                      key={s.id}
+                      tidId={s.id}
                       tidLabel={fullLabel}
                       profil={profil}
                       trigger={

@@ -6,6 +6,7 @@
 
 export type Brukerrolle = "bruker" | "instruktor" | "admin";
 export type Nivaa = "nybegynner" | "viderekomne" | "avansert" | "alle";
+export type OektStatus = "planlagt" | "avlyst" | "gjennomfort";
 export type PaameldingStatus =
   | "venter_betaling"
   | "bekreftet"
@@ -81,6 +82,16 @@ export type Kurspaamelding = {
   status: PaameldingStatus;
   venteliste_posisjon: number | null;
   vilkar_godtatt_dato: string | null;
+  opprettet: string;
+};
+
+export type KursOekt = {
+  id: string;
+  kurs_id: string;
+  dato: string;
+  start_tid: string;
+  slutt_tid: string;
+  status: OektStatus;
   opprettet: string;
 };
 
@@ -199,6 +210,12 @@ export type Database = {
         Update: Partial<Omit<TilgjengeligTid, "id">>;
         Relationships: [];
       };
+      kurs_oekter: {
+        Row: KursOekt;
+        Insert: InsertOf<KursOekt, "id" | "opprettet" | "status">;
+        Update: Partial<Omit<KursOekt, "id">>;
+        Relationships: [];
+      };
       bookinger: {
         Row: Booking;
         Insert: InsertOf<
@@ -238,6 +255,7 @@ export type Database = {
     };
     Enums: {
       brukerrolle: Brukerrolle;
+      oekt_status: OektStatus;
       paamelding_status: PaameldingStatus;
       booking_status: BookingStatus;
     };
