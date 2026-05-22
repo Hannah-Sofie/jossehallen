@@ -2,8 +2,11 @@ import Link from "next/link";
 import { GraduationCap, CalendarDays, Dumbbell, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { hentAktiveKurs } from "@/lib/kurs";
 import { KursKort } from "@/components/kurs/KursKort";
+import { Bildekarusell } from "@/components/forside/Bildekarusell";
+import { Faq } from "@/components/forside/Faq";
 
 export default async function Home() {
   const kommendeKurs = (await hentAktiveKurs()).slice(0, 3);
@@ -167,11 +170,35 @@ export default async function Home() {
                 </Link>
                 .
               </p>
+              <Link
+                href="/om"
+                className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
+              >
+                Les mer om hallen
+              </Link>
             </div>
             <div className="aspect-video rounded-lg bg-gradient-to-br from-muted to-muted-foreground/20" />
           </div>
         </div>
       </section>
+
+      <section className="border-t bg-muted/30">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Fra hallen
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Et lite innblikk i trening, kurs og lek hos oss.
+            </p>
+          </div>
+          <div className="mt-10 px-10">
+            <Bildekarusell />
+          </div>
+        </div>
+      </section>
+
+      <Faq />
     </>
   );
 }
