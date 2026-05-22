@@ -179,8 +179,10 @@ create policy "kurs_select_alle" on kurs for select to anon, authenticated using
 create policy "kurs_admin_all"   on kurs for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
 
 drop policy if exists "paameldinger_insert_alle" on kurspaameldinger;
+drop policy if exists "paameldinger_select_egen" on kurspaameldinger;
 drop policy if exists "paameldinger_admin_all"   on kurspaameldinger;
 create policy "paameldinger_insert_alle" on kurspaameldinger for insert to anon, authenticated with check (true);
+create policy "paameldinger_select_egen" on kurspaameldinger for select to authenticated using (lower(epost) = lower(auth.jwt() ->> 'email') or is_admin_or_instruktor());
 create policy "paameldinger_admin_all"   on kurspaameldinger for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
 
 drop policy if exists "tider_select_alle" on tilgjengelige_tider;
@@ -217,6 +219,50 @@ drop policy if exists "profil_admin_all"   on brukerprofil;
 create policy "profil_egen_select" on brukerprofil for select to authenticated using (bruker_id = auth.uid() or is_admin());
 create policy "profil_egen_update" on brukerprofil for update to authenticated using (bruker_id = auth.uid()) with check (bruker_id = auth.uid());
 create policy "profil_admin_all"   on brukerprofil for all    to authenticated using (is_admin()) with check (is_admin());
+
+-- =========================================================================
+-- PIN-koder for hall-låsen (admin setter, bruker ser via min_pinkode())
+-- =========================================================================
+
+create table if not exists pinkoder (
+  id           uuid        primary key default gen_random_uuid(),
+  kode         text        not null,
+  gyldig_fra   timestamptz not null default now(),
+  gyldig_til   timestamptz,
+  notat        text        not null default '',
+  opprettet_av uuid        references auth.users(id),
+  opprettet    timestamptz not null default now()
+);
+create index if not exists pinkoder_gyldig_idx on pinkoder (gyldig_fra desc);
+
+alter table pinkoder enable row level security;
+drop policy if exists "pinkoder_admin_all" on pinkoder;
+create policy "pinkoder_admin_all" on pinkoder for all to authenticated using (is_admin()) with check (is_admin());
+
+create or replace function pinkode_for(p_tid timestamptz)
+returns text language sql security definer set search_path = public stable as $$
+  select kode from pinkoder
+  where gyldig_fra <= p_tid and (gyldig_til is null or gyldig_til > p_tid)
+  order by gyldig_fra desc limit 1;
+$$;
+
+create or replace function min_pinkode(p_booking_id uuid)
+returns text language plpgsql security definer set search_path = public stable as $$
+declare v_uid uuid := auth.uid(); v_start timestamptz; v_end timestamptz;
+begin
+  if v_uid is null then return null; end if;
+  select (t.dato + t.start_tid) at time zone 'Europe/Oslo',
+         (t.dato + t.slutt_tid) at time zone 'Europe/Oslo'
+  into v_start, v_end
+  from bookinger b join tilgjengelige_tider t on t.id = b.tid_id
+  where b.id = p_booking_id and b.bruker_id = v_uid and b.status <> 'avbrutt';
+  if v_start is null then return null; end if;
+  if now() >= v_start - interval '15 minutes' and now() <= v_end + interval '15 minutes' then
+    return pinkode_for(v_start);
+  end if;
+  return null;
+end; $$;
+grant execute on function min_pinkode(uuid) to authenticated;
 
 -- =========================================================================
 -- View: kurs + antall ledige plasser (uten å lekke persondata til anon)
