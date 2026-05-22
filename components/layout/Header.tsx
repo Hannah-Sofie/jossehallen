@@ -36,11 +36,11 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-6xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         {/* Venstre: logo */}
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3"
+          className="flex shrink-0 items-center gap-3 lg:justify-self-start"
           onClick={() => setOpen(false)}
           aria-label="Jossehallen – til forsiden"
         >
@@ -57,8 +57,8 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
           </span>
         </Link>
 
-        {/* Midten: meny */}
-        <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex">
+        {/* Midten: meny (eksakt sentrert via grid) */}
+        <nav className="hidden items-center gap-9 lg:flex lg:justify-self-center">
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -77,7 +77,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
 
         {/* Høyre: handlinger */}
         {bruker ? (
-          <div className="hidden shrink-0 items-center gap-4 lg:flex">
+          <div className="hidden shrink-0 items-center gap-4 lg:flex lg:justify-self-end">
             <Link
               href={erAdminEllerInstr ? "/admin" : "/min-side"}
               className="inline-flex items-center gap-1.5 text-lg font-medium hover:underline"
@@ -88,7 +88,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
             <LoggUtKnapp />
           </div>
         ) : (
-          <div className="hidden shrink-0 items-center gap-3 lg:flex">
+          <div className="hidden shrink-0 items-center gap-3 lg:flex lg:justify-self-end">
             <Link
               href="/login"
               className={cn(
