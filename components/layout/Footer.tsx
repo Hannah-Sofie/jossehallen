@@ -79,12 +79,22 @@ export function Footer() {
         </div>
       </div>
 
+      {/* Kart */}
+      <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+        <div className="overflow-hidden rounded-2xl border">
+          <iframe
+            title="Kart til Jossehallen"
+            src="https://www.google.com/maps?q=Moelv&z=13&output=embed"
+            className="h-64 w-full"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
+
       <div className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:px-6">
-          <span>© {year} Jossehallen</span>
-          <Link href="/admin/login" className="hover:text-foreground">
-            Admin
-          </Link>
+        <div className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-muted-foreground sm:px-6">
+          © {year} Jossehallen
         </div>
       </div>
     </footer>

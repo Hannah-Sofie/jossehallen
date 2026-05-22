@@ -42,7 +42,7 @@ export async function krevRolle(
   returnTo = "/admin",
 ): Promise<{ user: User; profil: Brukerprofil }> {
   const auth = await hentBruker();
-  if (!auth) redirect(`/admin/login?retur=${encodeURIComponent(returnTo)}`);
+  if (!auth) redirect(`/login?retur=${encodeURIComponent(returnTo)}`);
   if (!roller.includes(auth.profil.rolle)) redirect("/");
   return auth;
 }

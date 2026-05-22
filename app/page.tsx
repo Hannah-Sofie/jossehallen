@@ -7,58 +7,92 @@ import { hentAktiveKurs } from "@/lib/kurs";
 import { KursKort } from "@/components/kurs/KursKort";
 import { Bildekarusell } from "@/components/forside/Bildekarusell";
 import { Faq } from "@/components/forside/Faq";
+import { HeroBakgrunn } from "@/components/forside/HeroBakgrunn";
 
 export default async function Home() {
   const kommendeKurs = (await hentAktiveKurs()).slice(0, 3);
 
   return (
     <>
-      <section className="relative overflow-hidden border-b">
-        {/* Lekne bakgrunns-bobler */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary/15 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl"
-        />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 text-center sm:px-6 sm:py-28 md:py-32">
-          <div className="mx-auto max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+      <section className="relative isolate overflow-hidden border-b">
+        <HeroBakgrunn />
+        <div className="relative mx-auto max-w-6xl px-4 py-28 text-center sm:px-6 sm:py-36 md:py-44">
+          <div className="mx-auto max-w-3xl text-white">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-sm font-medium backdrop-blur">
               <PawPrint className="h-4 w-4" />
               Innendørs hundehall i Moelv
             </span>
-            <h1 className="font-brand mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+            <h1 className="font-brand mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight drop-shadow-sm sm:text-6xl md:text-7xl">
               Trening, kurs og lek{" "}
-              <span className="text-primary">hele året</span>
+              <span className="text-primary-foreground underline decoration-primary decoration-4 underline-offset-8">
+                hele året
+              </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-              Jossehallen tilbyr kurs for hund og eier, og utleie av hallen til
-              egen trening. Velkommen innom!
+            <p className="mx-auto mt-6 max-w-xl text-lg text-white/90">
+              Jossehallen tilbyr kurs og treninger for hund og eier, og utleie av
+              hallen til egen trening. Velkommen innom!
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/kurs"
-                className={cn(buttonVariants({ size: "lg" }), "rounded-full px-7")}
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "h-12 rounded-full px-8 text-base",
+                )}
               >
-                Se kurs <ArrowRight className="ml-2 h-4 w-4" />
+                Se kurs og treninger <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
               <Link
                 href="/leie"
                 className={cn(
                   buttonVariants({ size: "lg", variant: "outline" }),
-                  "rounded-full px-7",
+                  "h-12 rounded-full border-white bg-white/10 px-8 text-base text-white backdrop-blur hover:bg-white/20 hover:text-white",
                 )}
               >
-                Bestill hall
+                Leie hall
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <section>
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <div>
+              <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Om Jossehallen
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Jossehallen er en innendørs hundehall som drives av lokale
+                entusiaster i Moelv. Hallen er et samlingssted for kurs,
+                trening og hyggelig lek — uavhengig av vær og årstid.
+              </p>
+              <p className="mt-4 text-muted-foreground">
+                For spørsmål om kurs, leie eller hallen generelt, ta gjerne
+                kontakt via{" "}
+                <Link
+                  href="/kontakt"
+                  className="font-medium text-foreground hover:underline"
+                >
+                  kontaktsiden
+                </Link>
+                .
+              </p>
+              <Link
+                href="/om"
+                className={cn(buttonVariants({ variant: "outline" }), "mt-6 rounded-full")}
+              >
+                Les mer om hallen
+              </Link>
+            </div>
+            <div className="aspect-video rounded-3xl bg-gradient-to-br from-primary/15 to-muted-foreground/20" />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t bg-muted/30">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
             Hva vi tilbyr
@@ -125,10 +159,11 @@ export default async function Home() {
             </Card>
           ))}
         </div>
+        </div>
       </section>
 
       {kommendeKurs.length > 0 ? (
-        <section className="border-t bg-muted/30">
+        <section className="border-t">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
             <div className="flex items-end justify-between gap-4">
               <div>
@@ -162,41 +197,6 @@ export default async function Home() {
           </div>
         </section>
       ) : null}
-
-      <section className="border-t">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-          <div className="grid items-center gap-8 md:grid-cols-2">
-            <div>
-              <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Om Jossehallen
-              </h2>
-              <p className="mt-4 text-muted-foreground">
-                Jossehallen er en innendørs hundehall som drives av lokale
-                entusiaster i Moelv. Hallen er et samlingssted for kurs,
-                trening og hyggelig lek — uavhengig av vær og årstid.
-              </p>
-              <p className="mt-4 text-muted-foreground">
-                For spørsmål om kurs, leie eller hallen generelt, ta gjerne
-                kontakt via{" "}
-                <Link
-                  href="/kontakt"
-                  className="font-medium text-foreground hover:underline"
-                >
-                  kontaktsiden
-                </Link>
-                .
-              </p>
-              <Link
-                href="/om"
-                className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
-              >
-                Les mer om hallen
-              </Link>
-            </div>
-            <div className="aspect-video rounded-lg bg-gradient-to-br from-muted to-muted-foreground/20" />
-          </div>
-        </div>
-      </section>
 
       <section className="border-t bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
