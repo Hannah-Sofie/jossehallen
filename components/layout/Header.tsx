@@ -51,7 +51,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
             priority
             className="h-14 w-14"
           />
-          <span className="font-brand text-2xl font-semibold uppercase tracking-wide">
+          <span className="font-brand text-xl font-bold uppercase tracking-wide">
             Jossehallen
           </span>
         </Link>
@@ -84,12 +84,12 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
               <LoggUtKnapp />
             </div>
           ) : (
-            <div className="ml-4 flex items-center gap-4">
+            <div className="ml-4 flex items-center gap-3">
               <Link
                 href="/login"
                 className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "rounded-full px-6",
+                  buttonVariants({ variant: "outline" }),
+                  "h-11 rounded-full px-5 text-base font-semibold",
                 )}
               >
                 <LogIn className="mr-1.5 h-4 w-4" />
@@ -97,7 +97,10 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
               </Link>
               <Link
                 href="/leie"
-                className={cn(buttonVariants({ size: "lg" }), "rounded-full px-6")}
+                className={cn(
+                  buttonVariants(),
+                  "h-11 rounded-full px-5 text-base font-semibold",
+                )}
               >
                 Leie hall
               </Link>
