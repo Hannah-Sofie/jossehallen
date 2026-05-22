@@ -80,6 +80,23 @@ create table if not exists tilgjengelige_tider (
 create index if not exists tider_ledig_dato_idx on tilgjengelige_tider (ledig, dato);
 
 do $$ begin
+  create type oekt_status as enum ('planlagt', 'avlyst', 'gjennomfort');
+exception when duplicate_object then null; end $$;
+
+create table if not exists kurs_oekter (
+  id        uuid        primary key default gen_random_uuid(),
+  kurs_id   uuid        not null references kurs(id) on delete cascade,
+  dato      date        not null,
+  start_tid time        not null,
+  slutt_tid time        not null,
+  status    oekt_status not null default 'planlagt',
+  opprettet timestamptz not null default now(),
+  constraint oekt_start_for_slutt check (start_tid < slutt_tid)
+);
+create index if not exists kurs_oekter_kurs_idx on kurs_oekter (kurs_id);
+create index if not exists kurs_oekter_dato_idx on kurs_oekter (dato, start_tid);
+
+do $$ begin
   create type booking_status as enum ('venter_betaling', 'bekreftet', 'avbrutt');
 exception when duplicate_object then null; end $$;
 
@@ -167,6 +184,12 @@ alter table kurspaameldinger      enable row level security;
 alter table tilgjengelige_tider   enable row level security;
 alter table bookinger             enable row level security;
 alter table brukerprofil          enable row level security;
+alter table kurs_oekter           enable row level security;
+
+drop policy if exists "oekter_select_alle" on kurs_oekter;
+drop policy if exists "oekter_admin_all"   on kurs_oekter;
+create policy "oekter_select_alle" on kurs_oekter for select to anon, authenticated using (true);
+create policy "oekter_admin_all"   on kurs_oekter for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
 
 drop policy if exists "instruktorer_select_alle" on instruktorer;
 drop policy if exists "instruktorer_admin_all"   on instruktorer;

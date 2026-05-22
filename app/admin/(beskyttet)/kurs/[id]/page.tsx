@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { hentAlleInstruktorer } from "@/lib/admin/instruktorer";
+import { hentOekterForKurs } from "@/lib/admin/oekter";
 import { KursSkjema } from "@/components/admin/KursSkjema";
+import { OekterSeksjon } from "@/components/admin/OekterSeksjon";
 
 export default async function RedigerKurs({
   params,
@@ -11,9 +13,10 @@ export default async function RedigerKurs({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const [{ data: kurs }, instruktorer] = await Promise.all([
+  const [{ data: kurs }, instruktorer, oekter] = await Promise.all([
     supabase.from("kurs").select("*").eq("id", id).maybeSingle(),
     hentAlleInstruktorer(),
+    hentOekterForKurs(id),
   ]);
 
   if (!kurs) notFound();
@@ -27,6 +30,8 @@ export default async function RedigerKurs({
       <div className="mt-6">
         <KursSkjema kurs={kurs} instruktorer={instruktorer} />
       </div>
+
+      <OekterSeksjon kursId={kurs.id} oekter={oekter} />
     </div>
   );
 }
