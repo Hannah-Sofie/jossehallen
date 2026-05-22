@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { StatusVelger } from "@/components/admin/StatusVelger";
+import { ForfremKnapp } from "@/components/admin/ForfremKnapp";
 
 const STATUS_VALG: { value: PaameldingStatus; label: string }[] = [
   { value: "venter_betaling", label: "Venter betaling" },
@@ -42,6 +43,7 @@ export default async function AdminPaameldinger() {
                 <TableHead>Kontakt</TableHead>
                 <TableHead>Dato</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="text-right">Venteliste</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -68,6 +70,16 @@ export default async function AdminPaameldinger() {
                       valg={STATUS_VALG}
                       endre={endrePaameldingStatus.bind(null, p.id)}
                     />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {p.status === "venteliste" ? (
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          #{p.ventelistePosisjon}
+                        </span>
+                        <ForfremKnapp id={p.id} />
+                      </div>
+                    ) : null}
                   </TableCell>
                 </TableRow>
               ))}
