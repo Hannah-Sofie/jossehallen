@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Noto_Sans } from "next/font/google";
+import { Raleway, Geist_Mono, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { hentBruker } from "@/lib/auth";
 
-const inter = Inter({
+const robotoCondensed = Roboto_Condensed({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const notoSans = Noto_Sans({
+const raleway = Raleway({
   variable: "--font-brand",
   subsets: ["latin"],
   weight: ["600", "700", "800"],
@@ -69,7 +69,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${inter.variable} ${geistMono.variable} ${notoSans.variable} h-full antialiased`}
+      className={`${robotoCondensed.variable} ${geistMono.variable} ${raleway.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />
