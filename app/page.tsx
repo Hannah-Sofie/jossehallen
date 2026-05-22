@@ -16,19 +16,19 @@ export default async function Home() {
     <>
       <section className="relative isolate overflow-hidden border-b">
         <HeroBakgrunn />
-        <div className="relative mx-auto max-w-6xl px-4 py-28 text-center sm:px-6 sm:py-36 md:py-44">
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-28 text-center sm:px-6 sm:py-36 md:py-44">
           <div className="mx-auto max-w-3xl text-white">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-sm font-medium backdrop-blur">
               <PawPrint className="h-4 w-4" />
               Innendørs hundehall i Moelv
             </span>
-            <h1 className="font-brand mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight drop-shadow-sm sm:text-6xl md:text-7xl">
+            <h1 className="font-brand mt-6 text-5xl font-bold leading-[1.05] tracking-tight drop-shadow-sm sm:text-6xl md:text-7xl">
               Trening, kurs og lek{" "}
               <span className="text-primary-foreground underline decoration-primary decoration-4 underline-offset-8">
                 hele året
               </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-white/90">
+            <p className="mx-auto mt-6 max-w-xl text-xl leading-relaxed text-white/95">
               Jossehallen tilbyr kurs og treninger for hund og eier, og utleie av
               hallen til egen trening. Velkommen innom!
             </p>
@@ -60,7 +60,7 @@ export default async function Home() {
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div>
-              <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <h2 className="font-brand text-3xl font-bold tracking-tight sm:text-4xl">
                 Om Jossehallen
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -86,7 +86,12 @@ export default async function Home() {
                 Les mer om hallen
               </Link>
             </div>
-            <div className="aspect-video rounded-3xl bg-gradient-to-br from-primary/15 to-muted-foreground/20" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=900&q=80"
+              alt="Hund i aktivitet"
+              className="aspect-video w-full rounded-3xl object-cover shadow-sm"
+            />
           </div>
         </div>
       </section>
@@ -94,7 +99,7 @@ export default async function Home() {
       <section className="border-t bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h2 className="font-brand text-3xl font-bold tracking-tight sm:text-4xl">
             Hva vi tilbyr
           </h2>
           <p className="mt-4 text-muted-foreground">
@@ -167,7 +172,7 @@ export default async function Home() {
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
+                <h2 className="font-brand text-3xl font-bold tracking-tight sm:text-4xl">
                   Kommende kurs
                 </h2>
                 <p className="mt-4 text-muted-foreground">
@@ -201,7 +206,7 @@ export default async function Home() {
       <section className="border-t bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-brand text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <h2 className="font-brand text-3xl font-bold tracking-tight sm:text-4xl">
               Fra hallen
             </h2>
             <p className="mt-4 text-muted-foreground">

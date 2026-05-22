@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X, UserRound, LogIn } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,11 +24,18 @@ export type HeaderBruker = {
 
 export function Header({ bruker }: { bruker: HeaderBruker }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const erAdminEllerInstr =
     bruker?.rolle === "admin" || bruker?.rolle === "instruktor";
 
+  function erAktiv(href: string) {
+    const sti = href.split("#")[0];
+    if (sti === "/") return pathname === "/";
+    return pathname === sti || pathname.startsWith(`${sti}/`);
+  }
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
@@ -43,48 +51,53 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
             priority
             className="h-14 w-14"
           />
-          <span className="font-brand text-2xl font-extrabold leading-none">
+          <span className="font-brand text-2xl font-semibold uppercase tracking-wide">
             Jossehallen
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+              data-aktiv={erAktiv(item.href) ? "" : undefined}
+              className={cn(
+                "relative py-1 text-lg font-medium text-foreground/70 transition-colors hover:text-foreground",
+                "after:absolute after:-bottom-0.5 after:left-0 after:h-[3px] after:w-0 after:rounded-full after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
+                "data-[aktiv]:text-foreground data-[aktiv]:after:w-full",
+              )}
             >
               {item.label}
             </Link>
           ))}
 
           {bruker ? (
-            <div className="flex items-center gap-3">
+            <div className="ml-2 flex items-center gap-4">
               <Link
                 href={erAdminEllerInstr ? "/admin" : "/min-side"}
-                className="inline-flex items-center gap-1.5 text-base font-medium hover:underline"
+                className="inline-flex items-center gap-1.5 text-lg font-medium hover:underline"
               >
-                <UserRound className="h-4 w-4" />
+                <UserRound className="h-5 w-5" />
                 {bruker.fornavn || "Min side"}
               </Link>
               <LoggUtKnapp />
             </div>
           ) : (
-            <div className="flex items-center gap-3">
+            <div className="ml-4 flex items-center gap-4">
               <Link
                 href="/login"
                 className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "rounded-full",
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "rounded-full px-6",
                 )}
               >
-                <LogIn className="mr-1 h-4 w-4" />
+                <LogIn className="mr-1.5 h-4 w-4" />
                 Logg inn
               </Link>
               <Link
                 href="/leie"
-                className={cn(buttonVariants(), "rounded-full")}
+                className={cn(buttonVariants({ size: "lg" }), "rounded-full px-6")}
               >
                 Leie hall
               </Link>
@@ -109,7 +122,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-md px-3 py-2.5 text-base hover:bg-accent"
+              className="rounded-md px-3 py-2.5 text-lg hover:bg-accent"
               onClick={() => setOpen(false)}
             >
               {item.label}
@@ -120,7 +133,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
             <>
               <Link
                 href={erAdminEllerInstr ? "/admin" : "/min-side"}
-                className="rounded-md px-3 py-2.5 text-base hover:bg-accent"
+                className="rounded-md px-3 py-2.5 text-lg hover:bg-accent"
                 onClick={() => setOpen(false)}
               >
                 {erAdminEllerInstr ? "Admin" : "Min side"}
