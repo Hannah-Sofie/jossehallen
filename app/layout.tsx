@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { DM_Sans, Geist_Mono } from "next/font/google";
+import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { hentBruker } from "@/lib/auth";
 
-// DM Sans brukes både for brødtekst og overskrifter/wordmark (én font overalt).
-const dmSans = DM_Sans({
+// Manrope brukes både for brødtekst og overskrifter/wordmark (én font overalt).
+const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -65,7 +65,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${dmSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />
