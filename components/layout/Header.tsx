@@ -4,14 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, UserRound, CalendarDays } from "lucide-react";
+import { Menu, X, UserRound, CalendarDays, LogIn } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { LoggUtKnapp } from "@/components/auth/LoggUtKnapp";
 import { cn } from "@/lib/utils";
 import type { Brukerrolle } from "@/types/database";
 
 const nav = [
-  { href: "/kurs", label: "Kurs" },
+  { href: "/kurs", label: "Kurs & treninger" },
   { href: "/om", label: "Om oss" },
   { href: "/kontakt", label: "Kontakt" },
 ];
@@ -42,18 +42,33 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
 
   const navLenke = (href: string, label: string, stor = false) => {
     const aktiv = erAktiv(href);
+    if (stor) {
+      return (
+        <Link
+          key={href}
+          href={href}
+          aria-current={aktiv ? "page" : undefined}
+          onClick={() => setOpen(false)}
+          className={cn(
+            "px-4 py-3 text-2xl font-semibold",
+            aktiv ? "text-primary" : "text-foreground",
+          )}
+        >
+          {label}
+        </Link>
+      );
+    }
     return (
       <Link
         key={href}
         href={href}
         aria-current={aktiv ? "page" : undefined}
-        onClick={() => setOpen(false)}
         className={cn(
-          "rounded-full font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-          stor ? "px-4 py-3 text-2xl" : "px-3.5 py-2 text-base",
+          "relative py-1 text-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "after:absolute after:-bottom-0.5 after:left-0 after:h-[3px] after:w-0 after:rounded-full after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
           aktiv
-            ? "bg-primary/10 text-primary"
-            : "text-foreground hover:bg-muted hover:text-primary",
+            ? "text-primary after:w-full"
+            : "text-foreground hover:text-primary",
         )}
       >
         {label}
@@ -74,7 +89,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
         width={64}
         height={64}
         priority
-        className={cn("transition-all", scrolled ? "h-11 w-11" : "h-14 w-14")}
+        className="h-14 w-14"
       />
       <span className="font-brand text-xl font-bold uppercase tracking-wide">
         Jossehallen
@@ -89,16 +104,11 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
         scrolled && "shadow-md",
       )}
     >
-      <div
-        className={cn(
-          "mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 transition-[height] duration-300 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]",
-          scrolled ? "h-16" : "h-20",
-        )}
-      >
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         {logo}
 
         {/* Midten: meny (eksakt sentrert via grid) */}
-        <nav className="hidden items-center gap-2 lg:flex lg:justify-self-center">
+        <nav className="hidden items-center gap-8 lg:flex lg:justify-self-center">
           {nav.map((item) => navLenke(item.href, item.label))}
         </nav>
 
@@ -118,8 +128,9 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
           <div className="hidden shrink-0 items-center gap-5 lg:flex lg:justify-self-end">
             <Link
               href="/login"
-              className="font-semibold text-foreground transition-colors hover:text-primary"
+              className="inline-flex items-center gap-1.5 font-semibold text-foreground transition-colors hover:text-primary"
             >
+              <LogIn className="h-4 w-4" />
               Logg inn
             </Link>
             <Link
