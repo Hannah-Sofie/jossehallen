@@ -11,6 +11,9 @@ import {
   type PaameldingData,
 } from "@/lib/validation/paamelding";
 import { meldPaaKurs } from "@/app/kurs/actions";
+import { BetalingsInfo } from "@/components/BetalingsInfo";
+import type { Betalingsinfo } from "@/lib/betaling";
+import { CheckCircle2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -40,8 +44,11 @@ type Props = {
   trigger: ReactElement;
 };
 
+type Suksess = { venteliste: boolean; betaling: Betalingsinfo };
+
 export function PameldingDialog({ kursId, kursNavn, fullt, trigger }: Props) {
   const [open, setOpen] = useState(false);
+  const [suksess, setSuksess] = useState<Suksess | null>(null);
   const [pending, startTransition] = useTransition();
 
   const form = useForm<PaameldingData>({
@@ -64,16 +71,24 @@ export function PameldingDialog({ kursId, kursNavn, fullt, trigger }: Props) {
     },
   });
 
+  function håndterÅpning(nyTilstand: boolean) {
+    setOpen(nyTilstand);
+    if (!nyTilstand) {
+      // Nullstill når dialogen lukkes
+      setTimeout(() => {
+        setSuksess(null);
+        form.reset();
+      }, 150);
+    }
+  }
+
   function onSubmit(values: PaameldingData) {
     startTransition(async () => {
       const res = await meldPaaKurs(values);
       if (res.ok) {
-        setOpen(false);
-        form.reset();
+        setSuksess({ venteliste: res.venteliste, betaling: res.betaling });
         toast.success(
-          res.venteliste
-            ? "Du er satt på venteliste. Vi kontakter deg om en plass blir ledig."
-            : "Påmelding registrert! Sjekk e-posten for betalingsinfo.",
+          res.venteliste ? "Du er satt på venteliste." : "Påmelding registrert!",
         );
       } else {
         toast.error(res.feil);
@@ -82,9 +97,35 @@ export function PameldingDialog({ kursId, kursNavn, fullt, trigger }: Props) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={håndterÅpning}>
       <DialogTrigger render={trigger} />
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        {suksess ? (
+          <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+                {suksess.venteliste ? "På venteliste" : "Påmelding registrert"}
+              </DialogTitle>
+              <DialogDescription>
+                {suksess.venteliste
+                  ? "Kurset er fullt, men du står nå på venteliste. Vi kontakter deg om en plass blir ledig. Du har også fått en e-post."
+                  : "Takk! Vi har sendt en bekreftelse på e-post. Fullfør betalingen for å sikre plassen."}
+              </DialogDescription>
+            </DialogHeader>
+
+            {!suksess.venteliste ? (
+              <div className="mt-2">
+                <BetalingsInfo info={suksess.betaling} />
+              </div>
+            ) : null}
+
+            <DialogFooter>
+              <DialogClose render={<Button>Lukk</Button>} />
+            </DialogFooter>
+          </>
+        ) : (
+          <>
         <DialogHeader>
           <DialogTitle>
             {fullt ? "Sett på venteliste" : "Meld på"}: {kursNavn}
@@ -313,6 +354,8 @@ export function PameldingDialog({ kursId, kursNavn, fullt, trigger }: Props) {
             </DialogFooter>
           </form>
         </Form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
