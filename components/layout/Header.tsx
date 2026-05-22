@@ -12,6 +12,7 @@ import type { Brukerrolle } from "@/types/database";
 const nav = [
   { href: "/kurs", label: "Kurs" },
   { href: "/leie", label: "Leie hall" },
+  { href: "/om", label: "Om hallen" },
   { href: "/kontakt", label: "Kontakt" },
 ];
 
