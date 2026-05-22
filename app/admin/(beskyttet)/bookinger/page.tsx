@@ -44,7 +44,9 @@ export default async function AdminBookinger() {
             <TableBody>
               {bookinger.map((b) => (
                 <TableRow key={b.id}>
-                  <TableCell className="font-medium">{b.navn}</TableCell>
+                  <TableCell className="font-medium">
+                    {b.fornavn} {b.etternavn}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {b.dato ? formatDato(b.dato) : "—"}
                     {b.start_tid

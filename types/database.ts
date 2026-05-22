@@ -86,11 +86,14 @@ export type TilgjengeligTid = {
 export type Booking = {
   id: string;
   tid_id: string;
-  navn: string;
+  bruker_id: string | null;
+  fornavn: string;
+  etternavn: string;
   epost: string;
   telefon: string;
   formaal: string;
   status: BookingStatus;
+  vilkar_godtatt_dato: string | null;
   opprettet: string;
 };
 
@@ -181,7 +184,12 @@ export type Database = {
         Row: Booking;
         Insert: InsertOf<
           Booking,
-          "id" | "opprettet" | "status" | "formaal"
+          | "id"
+          | "opprettet"
+          | "status"
+          | "formaal"
+          | "bruker_id"
+          | "vilkar_godtatt_dato"
         >;
         Update: Partial<Omit<Booking, "id">>;
         Relationships: [];
@@ -193,7 +201,21 @@ export type Database = {
         Relationships: [];
       };
     };
-    Functions: Record<string, never>;
+    Functions: {
+      book_tid: {
+        Args: {
+          p_tid_id: string;
+          p_fornavn: string;
+          p_etternavn: string;
+          p_epost: string;
+          p_telefon: string;
+          p_formaal: string;
+        };
+        Returns: string;
+      };
+      is_admin: { Args: Record<string, never>; Returns: boolean };
+      is_admin_or_instruktor: { Args: Record<string, never>; Returns: boolean };
+    };
     Enums: {
       brukerrolle: Brukerrolle;
       paamelding_status: PaameldingStatus;

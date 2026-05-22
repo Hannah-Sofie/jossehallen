@@ -9,19 +9,27 @@ export type Betalingsinfo = {
 
 /**
  * Bygger betalingsinfo. Referanse = kort, lesbar kode kunden oppgir ved betaling
- * (f.eks. "KURS-AB12CD"). Basert på påmeldings-id.
+ * (f.eks. "KURS-AB12CD" / "LEIE-AB12CD"). Basert på rad-id.
  */
 export function lagBetalingsinfo(
-  paameldingId: string,
+  id: string,
   belop: number,
+  prefiks: "KURS" | "LEIE" = "KURS",
 ): Betalingsinfo {
-  const kort = paameldingId.replace(/-/g, "").slice(0, 6).toUpperCase();
+  const kort = id.replace(/-/g, "").slice(0, 6).toUpperCase();
   return {
     vipps: process.env.NEXT_PUBLIC_VIPPS_NUMBER || null,
     konto: process.env.NEXT_PUBLIC_ACCOUNT_NUMBER || null,
     belop,
-    referanse: `KURS-${kort}`,
+    referanse: `${prefiks}-${kort}`,
   };
+}
+
+/** Pris for å leie hallen (1 time), fra env. */
+export function leiePris(): number {
+  const raw = process.env.NEXT_PUBLIC_LEIE_PRIS;
+  const n = raw ? Number.parseInt(raw, 10) : 0;
+  return Number.isFinite(n) ? n : 0;
 }
 
 export function formatKonto(konto: string): string {
