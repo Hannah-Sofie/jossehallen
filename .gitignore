@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# fil-synk-duplikater (iCloud o.l. lager "filnavn 2.ext")
+*\ 2.*
+*\ 2/
