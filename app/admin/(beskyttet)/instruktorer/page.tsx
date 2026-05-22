@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { hentAlleInstruktorer } from "@/lib/admin/instruktorer";
+import { hentBruker } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -10,9 +12,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { InstruktorHandlinger } from "@/components/admin/InstruktorHandlinger";
+import { InstruktorBrukerSkjema } from "@/components/admin/InstruktorBrukerSkjema";
 
 export default async function AdminInstruktorer() {
-  const instruktorer = await hentAlleInstruktorer();
+  const [instruktorer, auth] = await Promise.all([
+    hentAlleInstruktorer(),
+    hentBruker(),
+  ]);
+  const erAdmin = auth?.profil.rolle === "admin";
 
   return (
     <div>
@@ -22,11 +29,17 @@ export default async function AdminInstruktorer() {
         </h2>
         <Link
           href="/admin/instruktorer/ny"
-          className={buttonVariants({ size: "sm" })}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
         >
-          + Ny instruktør
+          + Profil uten innlogging
         </Link>
       </div>
+
+      {erAdmin ? (
+        <div className="mt-6">
+          <InstruktorBrukerSkjema />
+        </div>
+      ) : null}
 
       {instruktorer.length === 0 ? (
         <p className="mt-8 text-sm text-muted-foreground">
@@ -38,20 +51,30 @@ export default async function AdminInstruktorer() {
             <TableHeader>
               <TableRow>
                 <TableHead>Navn</TableHead>
+                <TableHead>Innlogging</TableHead>
                 <TableHead>Bio</TableHead>
-                <TableHead className="text-right">Handlinger</TableHead>
+                {erAdmin ? <TableHead className="text-right">Handlinger</TableHead> : null}
               </TableRow>
             </TableHeader>
             <TableBody>
               {instruktorer.map((i) => (
                 <TableRow key={i.id}>
                   <TableCell className="font-medium">{i.navn}</TableCell>
+                  <TableCell>
+                    {i.bruker_id ? (
+                      <Badge>Ja</Badge>
+                    ) : (
+                      <Badge variant="secondary">Nei</Badge>
+                    )}
+                  </TableCell>
                   <TableCell className="max-w-md truncate text-muted-foreground">
                     {i.bio || "—"}
                   </TableCell>
-                  <TableCell>
-                    <InstruktorHandlinger id={i.id} navn={i.navn} />
-                  </TableCell>
+                  {erAdmin ? (
+                    <TableCell>
+                      <InstruktorHandlinger id={i.id} navn={i.navn} />
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
             </TableBody>

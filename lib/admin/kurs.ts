@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { hentBruker } from "@/lib/auth";
 import { kursSchema } from "@/lib/validation/kurs";
 import type { Kurs } from "@/types/database";
 
@@ -86,12 +87,42 @@ export async function settAktiv(
   return { ok: true };
 }
 
-/** Alle kurs (også inaktive) for admin-liste. */
+/** Alle kurs (også inaktive) for admin-liste. Instruktør ser kun egne. */
 export async function hentAlleKursAdmin(): Promise<Kurs[]> {
+  const auth = await hentBruker();
   const supabase = await createClient();
+
+  if (auth && auth.profil.rolle === "instruktor") {
+    const { data: instr } = await supabase
+      .from("instruktorer")
+      .select("id")
+      .eq("bruker_id", auth.user.id);
+    const ids = (instr ?? []).map((x) => x.id);
+    if (ids.length === 0) return [];
+    const { data } = await supabase
+      .from("kurs")
+      .select("*")
+      .in("instruktor_id", ids)
+      .order("start_dato", { ascending: false });
+    return data ?? [];
+  }
+
   const { data } = await supabase
     .from("kurs")
     .select("*")
     .order("start_dato", { ascending: false });
   return data ?? [];
+}
+
+/** Instruktorer-id-en knyttet til innlogget instruktør (eller null). */
+export async function egetInstruktorId(): Promise<string | null> {
+  const auth = await hentBruker();
+  if (!auth || auth.profil.rolle !== "instruktor") return null;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("instruktorer")
+    .select("id")
+    .eq("bruker_id", auth.user.id)
+    .maybeSingle();
+  return data?.id ?? null;
 }
