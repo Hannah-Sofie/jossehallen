@@ -6,6 +6,7 @@ import {
   bookingBekreftelseEmne,
   kursPaaminnelseHtml,
   bookingPaaminnelseHtml,
+  massEpostHtml,
   type KursBekreftelseData,
   type BookingBekreftelseData,
   type KursPaaminnelseData,
@@ -105,6 +106,27 @@ export async function sendBookingPaaminnelse(
       to: til,
       subject: "Påminnelse: din booking i morgen – Jossehallen",
       html: bookingPaaminnelseHtml(data),
+    });
+    if (error) return { sendt: false, feil: error.message };
+    return { sendt: true };
+  } catch (e) {
+    return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
+  }
+}
+
+export async function sendMassEpostMelding(
+  til: string,
+  emne: string,
+  melding: string,
+  kursNavn: string,
+): Promise<SendResultat> {
+  if (!resend) return { sendt: false, feil: "ikke konfigurert" };
+  try {
+    const { error } = await resend.emails.send({
+      from: fra,
+      to: til,
+      subject: emne,
+      html: massEpostHtml(melding, kursNavn),
     });
     if (error) return { sendt: false, feil: error.message };
     return { sendt: true };
