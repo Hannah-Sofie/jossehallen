@@ -34,12 +34,12 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // /admin/* (unntatt selve login-siden) krever innlogging.
-  // Fin-kornet rollesjekk skjer i app/admin/layout.tsx.
+  // Alle logger inn samme sted (/login); rollesjekk skjer i admin-layout.
   const erAdminRute =
     pathname.startsWith("/admin") && pathname !== "/admin/login";
   if (erAdminRute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/admin/login";
+    url.pathname = "/login";
     url.searchParams.set("retur", pathname);
     return NextResponse.redirect(url);
   }

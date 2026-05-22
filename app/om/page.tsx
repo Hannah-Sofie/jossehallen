@@ -64,8 +64,8 @@ export default async function OmPage() {
       </section>
 
       {instruktorer.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="text-2xl font-semibold tracking-tight">Instruktører</h2>
+        <section id="instruktorer" className="mt-10 scroll-mt-24">
+          <h2 className="text-2xl font-semibold tracking-tight">Om oss – instruktørene</h2>
           <div className="mt-6 space-y-6">
             {instruktorer.map((i) => (
               <div key={i.id} className="flex gap-4">

@@ -1,25 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { hentBruker } from "@/lib/auth";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Manrope brukes både for brødtekst og overskrifter/wordmark (én font overalt).
+const manrope = Manrope({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const poppins = Poppins({
-  variable: "--font-brand",
-  subsets: ["latin"],
-  weight: ["700", "800"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -69,7 +65,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
+      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />
