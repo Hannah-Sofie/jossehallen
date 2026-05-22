@@ -1,25 +1,21 @@
 import type { Metadata } from "next";
-import { Raleway, Geist_Mono, Roboto_Condensed } from "next/font/google";
+import { DM_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { hentBruker } from "@/lib/auth";
 
-const robotoCondensed = Roboto_Condensed({
+// DM Sans brukes både for brødtekst og overskrifter/wordmark (én font overalt).
+const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const raleway = Raleway({
-  variable: "--font-brand",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -69,7 +65,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${robotoCondensed.variable} ${geistMono.variable} ${raleway.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />
