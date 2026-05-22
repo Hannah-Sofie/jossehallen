@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Outfit } from "next/font/google";
+import { Inter, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
+const notoSans = Noto_Sans({
   variable: "--font-brand",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["600", "700", "800"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -69,7 +69,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${inter.variable} ${geistMono.variable} ${outfit.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} ${notoSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />
