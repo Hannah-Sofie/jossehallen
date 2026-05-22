@@ -30,8 +30,45 @@ export default async function KursDetalj({ params }: Params) {
   const instruktor = await hentInstruktor(kurs.instruktor_id);
   const status = plassStatus(kurs.ledige_plasser);
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: kurs.navn,
+    description: kurs.beskrivelse || `Hundekurs i Jossehallen: ${kurs.navn}`,
+    provider: {
+      "@type": "Organization",
+      name: "Jossehallen",
+      url: siteUrl,
+    },
+    ...(kurs.pris > 0
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: kurs.pris,
+            priceCurrency: "NOK",
+            availability:
+              status.fullt
+                ? "https://schema.org/SoldOut"
+                : "https://schema.org/InStock",
+          },
+        }
+      : {}),
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "Onsite",
+      location: { "@type": "Place", name: kurs.sted },
+      startDate: kurs.start_dato,
+      ...(kurs.slutt_dato ? { endDate: kurs.slutt_dato } : {}),
+    },
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumbs */}
       <nav className="text-sm text-muted-foreground" aria-label="Brødsmuler">
         <Link href="/" className="hover:text-foreground">
