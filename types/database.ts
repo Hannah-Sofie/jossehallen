@@ -21,6 +21,16 @@ export type Instruktor = {
   opprettet: string;
 };
 
+export type Pinkode = {
+  id: string;
+  kode: string;
+  gyldig_fra: string;
+  gyldig_til: string | null;
+  notat: string;
+  opprettet_av: string | null;
+  opprettet: string;
+};
+
 export type Brukerprofil = {
   bruker_id: string;
   rolle: Brukerrolle;
@@ -113,6 +123,15 @@ export type Database = {
         Row: Instruktor;
         Insert: InsertOf<Instruktor, "id" | "opprettet" | "bio" | "bilde_url">;
         Update: Partial<Omit<Instruktor, "id">>;
+        Relationships: [];
+      };
+      pinkoder: {
+        Row: Pinkode;
+        Insert: InsertOf<
+          Pinkode,
+          "id" | "opprettet" | "gyldig_fra" | "gyldig_til" | "notat" | "opprettet_av"
+        >;
+        Update: Partial<Omit<Pinkode, "id">>;
         Relationships: [];
       };
       brukerprofil: {
@@ -215,6 +234,7 @@ export type Database = {
       };
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_admin_or_instruktor: { Args: Record<string, never>; Returns: boolean };
+      min_pinkode: { Args: { p_booking_id: string }; Returns: string | null };
     };
     Enums: {
       brukerrolle: Brukerrolle;

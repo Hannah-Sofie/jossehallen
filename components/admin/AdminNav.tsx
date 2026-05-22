@@ -11,6 +11,7 @@ const lenker = [
   { href: "/admin/paameldinger", label: "Påmeldinger" },
   { href: "/admin/tider", label: "Tider" },
   { href: "/admin/bookinger", label: "Bookinger" },
+  { href: "/admin/pin", label: "PIN" },
 ];
 
 export function AdminNav() {
