@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { krevInnlogget } from "@/lib/auth";
-import { LoggUtKnapp } from "@/components/auth/LoggUtKnapp";
 
 export const metadata: Metadata = {
   title: "Min side",
@@ -12,14 +11,11 @@ export default async function MinSide() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Min side</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Hei, {profil.fornavn || "der"}!
-          </p>
-        </div>
-        <LoggUtKnapp />
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Min side</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Hei, {profil.fornavn || "der"}!
+        </p>
       </div>
 
       <div className="mt-10 rounded-lg border border-dashed p-8 text-center text-muted-foreground">

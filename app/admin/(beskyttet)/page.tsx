@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { hentBruker } from "@/lib/auth";
-import { LoggUtKnapp } from "@/components/auth/LoggUtKnapp";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -12,15 +11,12 @@ export default async function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Admin</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Innlogget som {auth?.profil.fornavn} {auth?.profil.etternavn} (
-            {auth?.profil.rolle})
-          </p>
-        </div>
-        <LoggUtKnapp />
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Admin</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Innlogget som {auth?.profil.fornavn} {auth?.profil.etternavn} (
+          {auth?.profil.rolle})
+        </p>
       </div>
 
       <div className="mt-10 rounded-lg border border-dashed p-8 text-center text-muted-foreground">
