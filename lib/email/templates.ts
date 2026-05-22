@@ -186,3 +186,22 @@ export function bookingPaaminnelseHtml(d: BookingPaaminnelseData): string {
   </div>
 </body></html>`;
 }
+
+export function massEpostHtml(melding: string, kursNavn: string): string {
+  const avsnitt = melding
+    .split("\n")
+    .filter(Boolean)
+    .map((p) => `<p style="font-size:15px;margin:0 0 12px">${p}</p>`)
+    .join("");
+  return `<!doctype html>
+<html lang="nb"><body style="margin:0;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#111">
+  <div style="max-width:560px;margin:0 auto;padding:24px">
+    <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #eee">
+      <p style="font-weight:800;letter-spacing:1px;color:${BRAND};margin:0 0 4px">JOSSEHALLEN</p>
+      <p style="font-size:13px;color:#666;margin:0 0 16px">Melding om: ${kursNavn}</p>
+      ${avsnitt}
+      <p style="font-size:13px;color:#999;margin-top:16px">Vennlig hilsen<br>Jossehallen</p>
+    </div>
+  </div>
+</body></html>`;
+}

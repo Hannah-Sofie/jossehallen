@@ -80,6 +80,7 @@ export type Kurspaamelding = {
   hund_rase: string;
   kastrert: boolean;
   kommentar: string;
+  notat: string;
   status: PaameldingStatus;
   venteliste_posisjon: number | null;
   vilkar_godtatt_dato: string | null;
@@ -115,6 +116,7 @@ export type Booking = {
   telefon: string;
   formaal: string;
   status: BookingStatus;
+  notat: string;
   vilkar_godtatt_dato: string | null;
   opprettet: string;
 };
@@ -212,6 +214,7 @@ export type Database = {
           | "kastrert"
           | "venteliste_posisjon"
           | "vilkar_godtatt_dato"
+          | "notat"
         >;
         Update: Partial<Omit<Kurspaamelding, "id">>;
         Relationships: [];
@@ -244,6 +247,7 @@ export type Database = {
           | "formaal"
           | "bruker_id"
           | "vilkar_godtatt_dato"
+          | "notat"
         >;
         Update: Partial<Omit<Booking, "id">>;
         Relationships: [];

@@ -59,6 +59,7 @@ create table if not exists kurspaameldinger (
   hund_rase            text              not null default '',
   kastrert             boolean           not null default false,
   kommentar            text              not null default '',
+  notat                text              not null default '',
   status               paamelding_status not null default 'venter_betaling',
   venteliste_posisjon  integer,
   vilkar_godtatt_dato  timestamptz,
@@ -112,6 +113,7 @@ create table if not exists bookinger (
   telefon             text           not null,
   formaal             text           not null default '',
   status              booking_status not null default 'venter_betaling',
+  notat               text           not null default '',
   vilkar_godtatt_dato timestamptz,
   opprettet           timestamptz    not null default now()
 );
