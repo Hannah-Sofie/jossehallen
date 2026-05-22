@@ -19,6 +19,7 @@ export type Instruktor = {
   navn: string;
   bio: string;
   bilde_url: string | null;
+  bruker_id: string | null;
   opprettet: string;
 };
 
@@ -132,7 +133,10 @@ export type Database = {
     Tables: {
       instruktorer: {
         Row: Instruktor;
-        Insert: InsertOf<Instruktor, "id" | "opprettet" | "bio" | "bilde_url">;
+        Insert: InsertOf<
+          Instruktor,
+          "id" | "opprettet" | "bio" | "bilde_url" | "bruker_id"
+        >;
         Update: Partial<Omit<Instruktor, "id">>;
         Relationships: [];
       };

@@ -14,8 +14,10 @@ create table if not exists instruktorer (
   navn        text        not null,
   bio         text        not null default '',
   bilde_url   text,
+  bruker_id   uuid        references auth.users(id) on delete set null,
   opprettet   timestamptz not null default now()
 );
+create index if not exists instruktorer_bruker_idx on instruktorer (bruker_id);
 
 create table if not exists kurs (
   id             uuid        primary key default gen_random_uuid(),
@@ -172,6 +174,11 @@ returns boolean language sql security definer set search_path = public stable as
   select exists (select 1 from brukerprofil where bruker_id = auth.uid() and rolle in ('admin', 'instruktor'));
 $$;
 
+create or replace function mine_instruktor_ider()
+returns setof uuid language sql security definer set search_path = public stable as $$
+  select id from instruktorer where bruker_id = auth.uid();
+$$;
+
 -- =========================================================================
 -- Row Level Security
 -- Anon: se aktive kurs/tider/instruktorer, melde på kurs, booke tid.
@@ -193,20 +200,22 @@ create policy "oekter_admin_all"   on kurs_oekter for all    to authenticated us
 
 drop policy if exists "instruktorer_select_alle" on instruktorer;
 drop policy if exists "instruktorer_admin_all"   on instruktorer;
+drop policy if exists "instruktorer_egen_update" on instruktorer;
 create policy "instruktorer_select_alle" on instruktorer for select to anon, authenticated using (true);
 create policy "instruktorer_admin_all"   on instruktorer for all    to authenticated using (is_admin()) with check (is_admin());
+create policy "instruktorer_egen_update" on instruktorer for update to authenticated using (bruker_id = auth.uid()) with check (bruker_id = auth.uid());
 
 drop policy if exists "kurs_select_alle" on kurs;
 drop policy if exists "kurs_admin_all"   on kurs;
 create policy "kurs_select_alle" on kurs for select to anon, authenticated using (true);
-create policy "kurs_admin_all"   on kurs for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
+create policy "kurs_admin_all"   on kurs for all    to authenticated using (is_admin() or instruktor_id in (select mine_instruktor_ider())) with check (is_admin() or instruktor_id in (select mine_instruktor_ider()));
 
 drop policy if exists "paameldinger_insert_alle" on kurspaameldinger;
 drop policy if exists "paameldinger_select_egen" on kurspaameldinger;
 drop policy if exists "paameldinger_admin_all"   on kurspaameldinger;
 create policy "paameldinger_insert_alle" on kurspaameldinger for insert to anon, authenticated with check (true);
 create policy "paameldinger_select_egen" on kurspaameldinger for select to authenticated using (lower(epost) = lower(auth.jwt() ->> 'email') or is_admin_or_instruktor());
-create policy "paameldinger_admin_all"   on kurspaameldinger for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
+create policy "paameldinger_admin_all"   on kurspaameldinger for all    to authenticated using (is_admin() or kurs_id in (select k.id from kurs k where k.instruktor_id in (select mine_instruktor_ider()))) with check (is_admin() or kurs_id in (select k.id from kurs k where k.instruktor_id in (select mine_instruktor_ider())));
 
 drop policy if exists "tider_select_alle" on tilgjengelige_tider;
 drop policy if exists "tider_admin_all"   on tilgjengelige_tider;

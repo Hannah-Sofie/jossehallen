@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { hentAlleInstruktorer } from "@/lib/admin/instruktorer";
 import { hentOekterForKurs } from "@/lib/admin/oekter";
+import { egetInstruktorId } from "@/lib/admin/kurs";
+import { hentBruker } from "@/lib/auth";
 import { KursSkjema } from "@/components/admin/KursSkjema";
 import { OekterSeksjon } from "@/components/admin/OekterSeksjon";
 
@@ -13,13 +15,17 @@ export default async function RedigerKurs({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const [{ data: kurs }, instruktorer, oekter] = await Promise.all([
-    supabase.from("kurs").select("*").eq("id", id).maybeSingle(),
-    hentAlleInstruktorer(),
-    hentOekterForKurs(id),
-  ]);
+  const [{ data: kurs }, instruktorer, oekter, auth, egetId] =
+    await Promise.all([
+      supabase.from("kurs").select("*").eq("id", id).maybeSingle(),
+      hentAlleInstruktorer(),
+      hentOekterForKurs(id),
+      hentBruker(),
+      egetInstruktorId(),
+    ]);
 
   if (!kurs) notFound();
+  const erAdmin = auth?.profil.rolle === "admin";
 
   return (
     <div>
@@ -28,7 +34,12 @@ export default async function RedigerKurs({
       </Link>
       <h2 className="mt-2 text-xl font-semibold">Rediger: {kurs.navn}</h2>
       <div className="mt-6">
-        <KursSkjema kurs={kurs} instruktorer={instruktorer} />
+        <KursSkjema
+          kurs={kurs}
+          instruktorer={instruktorer}
+          erAdmin={erAdmin}
+          egetInstruktorId={egetId}
+        />
       </div>
 
       <OekterSeksjon kursId={kurs.id} oekter={oekter} />

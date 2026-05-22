@@ -1,9 +1,16 @@
 import Link from "next/link";
 import { hentAlleInstruktorer } from "@/lib/admin/instruktorer";
+import { egetInstruktorId } from "@/lib/admin/kurs";
+import { hentBruker } from "@/lib/auth";
 import { KursSkjema } from "@/components/admin/KursSkjema";
 
 export default async function NyttKurs() {
-  const instruktorer = await hentAlleInstruktorer();
+  const [instruktorer, auth, egetId] = await Promise.all([
+    hentAlleInstruktorer(),
+    hentBruker(),
+    egetInstruktorId(),
+  ]);
+  const erAdmin = auth?.profil.rolle === "admin";
 
   return (
     <div>
@@ -12,7 +19,11 @@ export default async function NyttKurs() {
       </Link>
       <h2 className="mt-2 text-xl font-semibold">Nytt kurs</h2>
       <div className="mt-6">
-        <KursSkjema instruktorer={instruktorer} />
+        <KursSkjema
+          instruktorer={instruktorer}
+          erAdmin={erAdmin}
+          egetInstruktorId={egetId}
+        />
       </div>
     </div>
   );

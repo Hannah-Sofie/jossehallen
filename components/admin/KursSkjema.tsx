@@ -32,9 +32,13 @@ import {
 export function KursSkjema({
   kurs,
   instruktorer,
+  erAdmin = true,
+  egetInstruktorId = null,
 }: {
   kurs?: Kurs;
   instruktorer: Instruktor[];
+  erAdmin?: boolean;
+  egetInstruktorId?: string | null;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -45,7 +49,7 @@ export function KursSkjema({
     defaultValues: {
       navn: kurs?.navn ?? "",
       beskrivelse: kurs?.beskrivelse ?? "",
-      instruktor_id: kurs?.instruktor_id ?? "",
+      instruktor_id: kurs?.instruktor_id ?? egetInstruktorId ?? "",
       bilde_url: kurs?.bilde_url ?? "",
       nivaa: kurs?.nivaa ?? "alle",
       sted: kurs?.sted ?? "Jossehallen",
@@ -107,31 +111,33 @@ export function KursSkjema({
         />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="instruktor_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Instruktør</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Ingen valgt" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="">Ingen</SelectItem>
-                    {instruktorer.map((i) => (
-                      <SelectItem key={i.id} value={i.id}>
-                        {i.navn}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {erAdmin ? (
+            <FormField
+              control={form.control}
+              name="instruktor_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Instruktør</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Ingen valgt" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="">Ingen</SelectItem>
+                      {instruktorer.map((i) => (
+                        <SelectItem key={i.id} value={i.id}>
+                          {i.navn}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : null}
 
           <FormField
             control={form.control}
