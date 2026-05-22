@@ -36,10 +36,11 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-6xl items-center gap-4 px-4 sm:px-6">
+        {/* Venstre: logo */}
         <Link
           href="/"
-          className="flex items-center gap-3"
+          className="flex shrink-0 items-center gap-3"
           onClick={() => setOpen(false)}
           aria-label="Jossehallen – til forsiden"
         >
@@ -56,7 +57,8 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        {/* Midten: meny */}
+        <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -71,48 +73,49 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
               {item.label}
             </Link>
           ))}
-
-          {bruker ? (
-            <div className="ml-2 flex items-center gap-4">
-              <Link
-                href={erAdminEllerInstr ? "/admin" : "/min-side"}
-                className="inline-flex items-center gap-1.5 text-lg font-medium hover:underline"
-              >
-                <UserRound className="h-5 w-5" />
-                {bruker.fornavn || "Min side"}
-              </Link>
-              <LoggUtKnapp />
-            </div>
-          ) : (
-            <div className="ml-4 flex items-center gap-3">
-              <Link
-                href="/login"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "h-11 rounded-full px-5 text-base font-semibold",
-                )}
-              >
-                <LogIn className="mr-1.5 h-4 w-4" />
-                Logg inn
-              </Link>
-              <Link
-                href="/leie"
-                className={cn(
-                  buttonVariants(),
-                  "h-11 rounded-full px-5 text-base font-semibold",
-                )}
-              >
-                Leie hall
-              </Link>
-            </div>
-          )}
         </nav>
+
+        {/* Høyre: handlinger */}
+        {bruker ? (
+          <div className="hidden shrink-0 items-center gap-4 lg:flex">
+            <Link
+              href={erAdminEllerInstr ? "/admin" : "/min-side"}
+              className="inline-flex items-center gap-1.5 text-lg font-medium hover:underline"
+            >
+              <UserRound className="h-5 w-5" />
+              {bruker.fornavn || "Min side"}
+            </Link>
+            <LoggUtKnapp />
+          </div>
+        ) : (
+          <div className="hidden shrink-0 items-center gap-3 lg:flex">
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "h-11 rounded-full px-5 text-base font-semibold",
+              )}
+            >
+              <LogIn className="mr-1.5 h-4 w-4" />
+              Logg inn
+            </Link>
+            <Link
+              href="/leie"
+              className={cn(
+                buttonVariants(),
+                "h-11 rounded-full px-5 text-base font-semibold",
+              )}
+            >
+              Leie hall
+            </Link>
+          </div>
+        )}
 
         <button
           type="button"
           aria-label={open ? "Lukk meny" : "Åpne meny"}
           aria-expanded={open}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md lg:hidden"
+          className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-md lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
