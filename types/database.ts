@@ -125,6 +125,14 @@ export type KursOffentlig = Kurs & {
   ledige_plasser: number;
 };
 
+export type Paaminnelselogg = {
+  id: string;
+  type: "kurs" | "booking";
+  ref_id: string;
+  for_dato: string;
+  sendt: string;
+};
+
 type InsertOf<T, Optional extends keyof T> = Omit<T, Optional> &
   Partial<Pick<T, Optional>>;
 
@@ -218,6 +226,12 @@ export type Database = {
         Row: KursOekt;
         Insert: InsertOf<KursOekt, "id" | "opprettet" | "status">;
         Update: Partial<Omit<KursOekt, "id">>;
+        Relationships: [];
+      };
+      paaminnelse_logg: {
+        Row: Paaminnelselogg;
+        Insert: InsertOf<Paaminnelselogg, "id" | "sendt">;
+        Update: Partial<Omit<Paaminnelselogg, "id">>;
         Relationships: [];
       };
       bookinger: {

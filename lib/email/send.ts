@@ -4,8 +4,12 @@ import {
   kursBekreftelseEmne,
   bookingBekreftelseHtml,
   bookingBekreftelseEmne,
+  kursPaaminnelseHtml,
+  bookingPaaminnelseHtml,
   type KursBekreftelseData,
   type BookingBekreftelseData,
+  type KursPaaminnelseData,
+  type BookingPaaminnelseData,
 } from "@/lib/email/templates";
 
 const apiKey = process.env.RESEND_API_KEY;
@@ -67,6 +71,44 @@ export async function sendBookingBekreftelse(
     return { sendt: true };
   } catch (e) {
     console.error("[email] Uventet feil:", e);
+    return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
+  }
+}
+
+export async function sendKursPaaminnelse(
+  til: string,
+  data: KursPaaminnelseData,
+): Promise<SendResultat> {
+  if (!resend) return { sendt: false, feil: "ikke konfigurert" };
+  try {
+    const { error } = await resend.emails.send({
+      from: fra,
+      to: til,
+      subject: `Påminnelse: ${data.kursNavn} i morgen – Jossehallen`,
+      html: kursPaaminnelseHtml(data),
+    });
+    if (error) return { sendt: false, feil: error.message };
+    return { sendt: true };
+  } catch (e) {
+    return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
+  }
+}
+
+export async function sendBookingPaaminnelse(
+  til: string,
+  data: BookingPaaminnelseData,
+): Promise<SendResultat> {
+  if (!resend) return { sendt: false, feil: "ikke konfigurert" };
+  try {
+    const { error } = await resend.emails.send({
+      from: fra,
+      to: til,
+      subject: "Påminnelse: din booking i morgen – Jossehallen",
+      html: bookingPaaminnelseHtml(data),
+    });
+    if (error) return { sendt: false, feil: error.message };
+    return { sendt: true };
+  } catch (e) {
     return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
   }
 }

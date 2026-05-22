@@ -127,3 +127,62 @@ export function bookingBekreftelseHtml(d: BookingBekreftelseData): string {
   </div>
 </body></html>`;
 }
+
+export type KursPaaminnelseData = {
+  fornavn: string;
+  kursNavn: string;
+  dato: string;
+  startTid: string | null;
+  sluttTid: string | null;
+  sted: string;
+};
+
+export function kursPaaminnelseHtml(d: KursPaaminnelseData): string {
+  const tid =
+    d.startTid && d.sluttTid
+      ? ` kl ${d.startTid.slice(0, 5)}–${d.sluttTid.slice(0, 5)}`
+      : "";
+  return `<!doctype html>
+<html lang="nb"><body style="margin:0;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#111">
+  <div style="max-width:560px;margin:0 auto;padding:24px">
+    <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #eee">
+      <p style="font-weight:800;letter-spacing:1px;color:${BRAND};margin:0 0 16px">JOSSEHALLEN</p>
+      <p style="font-size:15px">Hei ${d.fornavn || "der"},</p>
+      <p style="font-size:15px">
+        Påminnelse: <strong>${d.kursNavn}</strong> er i morgen,
+        ${formatDatoLang(d.dato)}${tid}, på ${d.sted}.
+      </p>
+      <p style="font-size:13px;color:#666;margin-top:16px">Vi gleder oss til å se deg og hunden din!</p>
+      <p style="font-size:13px;color:#999;margin-top:16px">Vennlig hilsen<br>Jossehallen</p>
+    </div>
+  </div>
+</body></html>`;
+}
+
+export type BookingPaaminnelseData = {
+  fornavn: string;
+  dato: string;
+  startTid: string;
+  sluttTid: string;
+  sted: string;
+};
+
+export function bookingPaaminnelseHtml(d: BookingPaaminnelseData): string {
+  return `<!doctype html>
+<html lang="nb"><body style="margin:0;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#111">
+  <div style="max-width:560px;margin:0 auto;padding:24px">
+    <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #eee">
+      <p style="font-weight:800;letter-spacing:1px;color:${BRAND};margin:0 0 16px">JOSSEHALLEN</p>
+      <p style="font-size:15px">Hei ${d.fornavn || "der"},</p>
+      <p style="font-size:15px">
+        Påminnelse: du har booket hallen i morgen,
+        ${formatDatoLang(d.dato)} kl ${d.startTid.slice(0, 5)}–${d.sluttTid.slice(0, 5)}.
+      </p>
+      <p style="font-size:13px;color:#666;margin-top:16px">
+        PIN-kode til døren finner du på «Min side» rundt booking-tidspunktet.
+      </p>
+      <p style="font-size:13px;color:#999;margin-top:16px">Vennlig hilsen<br>Jossehallen</p>
+    </div>
+  </div>
+</body></html>`;
+}
