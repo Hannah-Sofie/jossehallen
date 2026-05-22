@@ -84,15 +84,20 @@ do $$ begin
 exception when duplicate_object then null; end $$;
 
 create table if not exists bookinger (
-  id        uuid           primary key default gen_random_uuid(),
-  tid_id    uuid           not null references tilgjengelige_tider(id) on delete restrict,
-  navn      text           not null,                    -- splittes til fornavn/etternavn i #4
-  epost     text           not null,
-  telefon   text           not null,
-  formaal   text           not null default '',
-  status    booking_status not null default 'venter_betaling',
-  opprettet timestamptz    not null default now()
+  id                  uuid           primary key default gen_random_uuid(),
+  tid_id              uuid           not null references tilgjengelige_tider(id) on delete restrict,
+  bruker_id           uuid           references auth.users(id) on delete set null,
+  fornavn             text           not null,
+  etternavn           text           not null default '',
+  epost               text           not null,
+  telefon             text           not null,
+  formaal             text           not null default '',
+  status              booking_status not null default 'venter_betaling',
+  vilkar_godtatt_dato timestamptz,
+  opprettet           timestamptz    not null default now()
 );
+
+create index if not exists bookinger_bruker_idx on bookinger (bruker_id);
 
 create index if not exists bookinger_tid_idx    on bookinger (tid_id);
 create index if not exists bookinger_status_idx on bookinger (status);
@@ -183,10 +188,28 @@ drop policy if exists "tider_admin_all"   on tilgjengelige_tider;
 create policy "tider_select_alle" on tilgjengelige_tider for select to anon, authenticated using (true);
 create policy "tider_admin_all"   on tilgjengelige_tider for all    to authenticated using (is_admin()) with check (is_admin());
 
-drop policy if exists "bookinger_insert_alle" on bookinger;
+-- Booking krever innlogging og skjer via book_tid()-funksjonen (under).
+drop policy if exists "bookinger_select_egen" on bookinger;
 drop policy if exists "bookinger_admin_all"   on bookinger;
-create policy "bookinger_insert_alle" on bookinger for insert to anon, authenticated with check (true);
+create policy "bookinger_select_egen" on bookinger for select to authenticated using (bruker_id = auth.uid() or is_admin_or_instruktor());
 create policy "bookinger_admin_all"   on bookinger for all    to authenticated using (is_admin_or_instruktor()) with check (is_admin_or_instruktor());
+
+create or replace function book_tid(
+  p_tid_id uuid, p_fornavn text, p_etternavn text, p_epost text, p_telefon text, p_formaal text
+) returns uuid language plpgsql security definer set search_path = public as $$
+declare v_uid uuid := auth.uid(); v_ledig boolean; v_booking_id uuid;
+begin
+  if v_uid is null then raise exception 'Krever innlogging' using errcode = '28000'; end if;
+  select ledig into v_ledig from tilgjengelige_tider where id = p_tid_id for update;
+  if v_ledig is null then raise exception 'Tiden finnes ikke' using errcode = 'P0002'; end if;
+  if not v_ledig then raise exception 'Tiden er allerede booket' using errcode = 'P0001'; end if;
+  update tilgjengelige_tider set ledig = false where id = p_tid_id;
+  insert into bookinger (tid_id, bruker_id, fornavn, etternavn, epost, telefon, formaal, status, vilkar_godtatt_dato)
+  values (p_tid_id, v_uid, p_fornavn, p_etternavn, p_epost, p_telefon, p_formaal, 'venter_betaling', now())
+  returning id into v_booking_id;
+  return v_booking_id;
+end; $$;
+grant execute on function book_tid(uuid, text, text, text, text, text) to authenticated;
 
 drop policy if exists "profil_egen_select" on brukerprofil;
 drop policy if exists "profil_egen_update" on brukerprofil;

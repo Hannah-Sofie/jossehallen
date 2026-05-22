@@ -2,7 +2,10 @@ import { Resend } from "resend";
 import {
   kursBekreftelseHtml,
   kursBekreftelseEmne,
+  bookingBekreftelseHtml,
+  bookingBekreftelseEmne,
   type KursBekreftelseData,
+  type BookingBekreftelseData,
 } from "@/lib/email/templates";
 
 const apiKey = process.env.RESEND_API_KEY;
@@ -30,6 +33,32 @@ export async function sendKursBekreftelse(
       to: til,
       subject: kursBekreftelseEmne(data),
       html: kursBekreftelseHtml(data),
+    });
+    if (error) {
+      console.error("[email] Resend-feil:", error);
+      return { sendt: false, feil: error.message };
+    }
+    return { sendt: true };
+  } catch (e) {
+    console.error("[email] Uventet feil:", e);
+    return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
+  }
+}
+
+export async function sendBookingBekreftelse(
+  til: string,
+  data: BookingBekreftelseData,
+): Promise<SendResultat> {
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY mangler — hopper over e-post til", til);
+    return { sendt: false, feil: "ikke konfigurert" };
+  }
+  try {
+    const { error } = await resend.emails.send({
+      from: fra,
+      to: til,
+      subject: bookingBekreftelseEmne(),
+      html: bookingBekreftelseHtml(data),
     });
     if (error) {
       console.error("[email] Resend-feil:", error);
