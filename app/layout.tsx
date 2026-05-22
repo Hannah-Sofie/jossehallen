@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Fredoka } from "next/font/google";
+import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const fredoka = Fredoka({
+const outfit = Outfit({
   variable: "--font-brand",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -69,7 +69,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header bruker={bruker} />

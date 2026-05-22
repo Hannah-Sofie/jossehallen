@@ -63,9 +63,9 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
               href={item.href}
               data-aktiv={erAktiv(item.href) ? "" : undefined}
               className={cn(
-                "relative py-1 text-lg font-medium text-foreground/70 transition-colors hover:text-foreground",
+                "relative py-1 text-lg font-semibold text-foreground transition-colors hover:text-primary",
                 "after:absolute after:-bottom-0.5 after:left-0 after:h-[3px] after:w-0 after:rounded-full after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
-                "data-[aktiv]:text-foreground data-[aktiv]:after:w-full",
+                "data-[aktiv]:text-primary data-[aktiv]:after:w-full",
               )}
             >
               {item.label}

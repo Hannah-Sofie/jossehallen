@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, CalendarDays, Dumbbell, ArrowRight, PawPrint } from "lucide-react";
+import { GraduationCap, CalendarDays, Dumbbell, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -18,19 +18,16 @@ export default async function Home() {
         <HeroBakgrunn />
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-28 text-center sm:px-6 sm:py-36 md:py-44">
           <div className="mx-auto max-w-3xl text-white">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-sm font-medium backdrop-blur">
-              <PawPrint className="h-4 w-4" />
-              Innendørs hundehall i Moelv
-            </span>
-            <h1 className="font-brand mt-6 text-5xl font-bold leading-[1.05] tracking-tight drop-shadow-sm sm:text-6xl md:text-7xl">
+            <h1 className="font-brand text-6xl font-bold leading-[1.03] tracking-tight drop-shadow-sm sm:text-7xl md:text-8xl">
               Trening, kurs og lek{" "}
-              <span className="text-primary-foreground underline decoration-primary decoration-4 underline-offset-8">
+              <span className="underline decoration-primary decoration-[6px] underline-offset-[10px]">
                 hele året
               </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-xl leading-relaxed text-white/95">
-              Jossehallen tilbyr kurs og treninger for hund og eier, og utleie av
-              hallen til egen trening. Velkommen innom!
+            <p className="mx-auto mt-8 max-w-2xl text-2xl leading-relaxed text-white/95">
+              Jossehallen er en innendørs hundehall i Moelv. Vi tilbyr kurs og
+              treninger for hund og eier, og utleie av hallen til egen trening —
+              velkommen innom!
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link

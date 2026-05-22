@@ -82,6 +82,24 @@ export function Footer() {
               <a href="mailto:" className="hover:text-foreground">E-post kommer</a>
             </li>
           </ul>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold">Åpningstider</h3>
+          <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+            <li className="flex justify-between gap-4">
+              <span>Man–fre</span>
+              <span>16:00–21:00</span>
+            </li>
+            <li className="flex justify-between gap-4">
+              <span>Lør–søn</span>
+              <span>10:00–16:00</span>
+            </li>
+            <li className="mt-1 flex items-start gap-2 text-xs">
+              <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span>Ellers etter avtale ved kurs/booking.</span>
+            </li>
+          </ul>
           {/* Lite kart */}
           <div className="mt-4 overflow-hidden rounded-xl border">
             <iframe
@@ -92,20 +110,6 @@ export function Footer() {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold">Åpningstider</h3>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2">
-              <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-              <span>
-                Etter avtale og ved kurs/booking.
-                <br />
-                <span className="text-xs">[Fyll inn faste tider.]</span>
-              </span>
-            </li>
-          </ul>
         </div>
       </div>
 
