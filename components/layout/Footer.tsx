@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, PawPrint } from "lucide-react";
 
 function FacebookIkon() {
   return (
@@ -10,22 +10,16 @@ function FacebookIkon() {
   );
 }
 
-function InstagramIkon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-muted/40">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
+    <footer className="relative overflow-hidden border-t bg-primary/[0.08]">
+      <PawPrint
+        aria-hidden
+        className="pointer-events-none absolute -right-4 top-8 h-28 w-28 rotate-12 text-primary/10"
+      />
+      <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.png" alt="" width={48} height={48} className="h-12 w-12" />
@@ -33,30 +27,25 @@ export function Footer() {
               Jossehallen
             </span>
           </Link>
-          <p className="mt-3 text-sm text-muted-foreground">
+          <p className="mt-3 text-base text-muted-foreground">
             Innendørs hundehall i Moelv. Kurs, trening og utleie.
           </p>
-          <div className="mt-4 flex gap-3">
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-background text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
+          <a
+            href="https://www.facebook.com/profile.php?id=61584794071924"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1877F2] text-white">
               <FacebookIkon />
-            </a>
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-background text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
-              <InstagramIkon />
-            </a>
-          </div>
+            </span>
+            Følg oss på Facebook
+          </a>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold">Lenker</h3>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+          <h3 className="text-base font-semibold">Lenker</h3>
+          <ul className="mt-3 space-y-2 text-base text-muted-foreground">
             <li><Link href="/kurs" className="hover:text-foreground">Kurs og treninger</Link></li>
             <li><Link href="/leie" className="hover:text-foreground">Leie hall</Link></li>
             <li><Link href="/om" className="hover:text-foreground">Om hallen</Link></li>
@@ -67,36 +56,41 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold">Kontakt</h3>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-              <span>Adresse kommer, Moelv</span>
+          <h3 className="text-base font-semibold">Kontakt</h3>
+          <ul className="mt-3 space-y-3 text-base text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+              <a
+                href="https://www.google.com/maps?q=Kinnevegen+62,+2390+Moelv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground"
+              >
+                Kinnevegen 62, 2390 Moelv
+              </a>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="h-4 w-4 shrink-0" aria-hidden />
-              <a href="tel:" className="hover:text-foreground">Telefon kommer</a>
+              <a href="tel:+4746805824" className="hover:text-foreground">+47 46 80 58 24</a>
             </li>
             <li className="flex items-center gap-2">
               <Mail className="h-4 w-4 shrink-0" aria-hidden />
-              <a href="mailto:" className="hover:text-foreground">E-post kommer</a>
+              <a href="mailto:jossehallen@hundehall.no" className="hover:text-foreground">
+                jossehallen@hundehall.no
+              </a>
             </li>
           </ul>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold">Åpningstider</h3>
-          <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+          <h3 className="text-base font-semibold">Åpningstider</h3>
+          <ul className="mt-3 space-y-1 text-base text-muted-foreground">
             <li className="flex justify-between gap-4">
-              <span>Man–fre</span>
-              <span>16:00–21:00</span>
+              <span>Mandag–søndag</span>
+              <span>09:00–22:00</span>
             </li>
-            <li className="flex justify-between gap-4">
-              <span>Lør–søn</span>
-              <span>10:00–16:00</span>
-            </li>
-            <li className="mt-1 flex items-start gap-2 text-xs">
-              <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+            <li className="mt-3 flex items-start gap-2 text-sm">
+              <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
               <span>Ellers etter avtale ved kurs/booking.</span>
             </li>
           </ul>
@@ -104,7 +98,7 @@ export function Footer() {
           <div className="mt-4 overflow-hidden rounded-xl border">
             <iframe
               title="Kart til Jossehallen"
-              src="https://www.google.com/maps?q=Moelv&z=13&output=embed"
+              src="https://www.google.com/maps?q=Kinnevegen+62,+2390+Moelv&z=15&output=embed"
               className="h-32 w-full"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

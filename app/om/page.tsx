@@ -25,23 +25,41 @@ export default async function OmPage() {
 
       <h1 className="mt-4 text-4xl font-semibold tracking-tight">Om Jossehallen</h1>
 
-      <div className="mt-6 space-y-4 text-muted-foreground">
+      <div className="mt-6 space-y-4 text-lg leading-relaxed text-muted-foreground">
         <p>
-          Jossehallen er en innendørs hundehall i Moelv, drevet av lokale
-          entusiaster. Vi er et samlingssted for kurs, trening og hyggelig lek
-          – uavhengig av vær og årstid. <strong>[Fyll inn mer om historien og
-          hvem dere er.]</strong>
+          Jossehallen er en innendørs hundehall i Moelv som åpnet mot slutten
+          av 2024. Hallen drives av Hege Waagan og er et samlingssted for kurs,
+          trening og hyggelig lek – uavhengig av vær og årstid.
         </p>
+        <p>
+          Du finner oss i Kinnevegen 62, 2390 Moelv. Hallen har mykt
+          kunstgress-underlag, god belysning og oppvarming – og er åpen alle
+          dager fra 09 til 22.
+        </p>
+      </div>
+
+      <div className="mt-8 overflow-hidden rounded-2xl">
+        <Image
+          src="/bilder/agility-bane.jpg"
+          alt="Agility-bane satt opp i Jossehallen"
+          width={1920}
+          height={1080}
+          className="h-auto w-full"
+        />
       </div>
 
       <section className="mt-10">
         <h2 className="text-2xl font-semibold tracking-tight">Utstyr og fasiliteter</h2>
         <ul className="mt-4 list-disc space-y-1 pl-5 text-muted-foreground">
-          <li>Stor hall med mykt, sklisikkert underlag</li>
-          <li>Agility-utstyr og hindringer</li>
+          <li>Romslig hall på ca. 10 × 25 meter med mykt, sklisikkert kunstgress-underlag</li>
+          <li>
+            Komplett agility-utstyr: 10 hopphinder, 2 slalåm, 2 tunneller,
+            lengdehopp, mur og vippe
+          </li>
+          <li>10 plattformer/dokrakker for trening og lek</li>
+          <li>Nummerskilt og sandsekker til oppsett av baner</li>
           <li>God belysning og oppvarming</li>
           <li>Parkering og inngang rett ved hallen</li>
-          <li><strong>[Juster listen etter hva dere faktisk har.]</strong></li>
         </ul>
       </section>
 

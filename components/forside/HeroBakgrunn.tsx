@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Eksempelbilder (bytt ut med egne bilder fra hallen senere).
+// Bilder fra Jossehallen.
 const bilder = [
-  "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1600&q=80",
-  "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1600&q=80",
-  "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1600&q=80",
+  "/bilder/agility.jpg",
+  "/bilder/trening.jpg",
+  "/bilder/tur.jpg",
 ];
 
 export function HeroBakgrunn() {
@@ -25,14 +26,16 @@ export function HeroBakgrunn() {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {bilder.map((src, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           key={src}
           src={src}
           alt=""
           aria-hidden
+          fill
+          sizes="100vw"
+          fetchPriority={i === 0 ? "high" : "auto"}
           className={cn(
-            "absolute inset-0 h-full w-full object-cover transition-opacity duration-1000",
+            "object-cover transition-opacity duration-1000",
             i === aktiv ? "opacity-100" : "opacity-0",
           )}
         />

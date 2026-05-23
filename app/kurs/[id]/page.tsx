@@ -38,7 +38,7 @@ export default async function KursDetalj({ params }: Params) {
     hentInstruktor(kurs.instruktor_id),
     hentKursOekter(kurs.id),
   ]);
-  const status = plassStatus(kurs.ledige_plasser);
+  const status = plassStatus(kurs.ledige_plasser, kurs.maks_deltakere);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const jsonLd = {
@@ -106,7 +106,7 @@ export default async function KursDetalj({ params }: Params) {
         ) : (
           <BildeFallback iconClassName="max-h-28 max-w-28" />
         )}
-        <Badge variant={status.variant} className="absolute right-4 top-4 shadow-sm">
+        <Badge className={`${status.badgeClass} absolute right-4 top-4 shadow-sm`}>
           {status.label}
         </Badge>
       </div>

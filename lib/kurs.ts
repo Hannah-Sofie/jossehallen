@@ -59,21 +59,35 @@ export async function hentKursOekter(kursId: string): Promise<KursOekt[]> {
 
 export type PlassStatus = {
   label: string;
-  variant: "default" | "secondary" | "destructive";
+  /** Tailwind-klasser for badge-fargen (grønn/oransje/rød). */
+  badgeClass: string;
   fullt: boolean;
 };
 
-/** Avgjør status-badge ut fra ledige plasser. */
-export function plassStatus(ledige: number): PlassStatus {
+/**
+ * Avgjør status-badge ut fra ledige plasser og total kapasitet.
+ * - Fullt (0 ledige) → rød
+ * - Få plasser (over 50 % av plassene tatt) → oransje
+ * - Ledige plasser → grønn
+ */
+export function plassStatus(ledige: number, maks: number): PlassStatus {
   if (ledige <= 0)
-    return { label: "Fullt – venteliste", variant: "destructive", fullt: true };
-  if (ledige <= 3)
+    return {
+      label: "Fullt",
+      badgeClass: "border-transparent bg-red-600 text-white",
+      fullt: true,
+    };
+  if (maks > 0 && ledige < maks / 2)
     return {
       label: `Få plasser (${ledige} igjen)`,
-      variant: "secondary",
+      badgeClass: "border-transparent bg-amber-500 text-white",
       fullt: false,
     };
-  return { label: "Ledige plasser", variant: "default", fullt: false };
+  return {
+    label: "Ledige plasser",
+    badgeClass: "border-transparent bg-emerald-600 text-white",
+    fullt: false,
+  };
 }
 
 const NIVAA_LABEL: Record<Nivaa, string> = {
