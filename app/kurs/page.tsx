@@ -18,11 +18,21 @@ export default async function KursPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
       <div className="max-w-2xl">
-        <h1 className="text-4xl font-semibold tracking-tight">Kurs</h1>
+        <p className="text-sm font-semibold uppercase tracking-wide text-primary">
+          Kurs &amp; trening
+        </p>
+        <h1 className="mt-2 text-4xl font-semibold tracking-tight">
+          Finn kurset som passer dere
+        </h1>
         <p className="mt-4 text-muted-foreground">
           Jossehallen tilbyr kurs for hund og eier i alle nivåer. Meld deg på
           under — har du spørsmål, ta kontakt.
         </p>
+        {kurs.length > 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            {kurs.length} kurs ute nå
+          </p>
+        ) : null}
       </div>
 
       {kurs.length === 0 ? (
