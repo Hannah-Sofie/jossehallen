@@ -205,3 +205,47 @@ export function massEpostHtml(melding: string, kursNavn: string): string {
   </div>
 </body></html>`;
 }
+
+/** Escaper brukerinput før den settes inn i e-post-HTML. */
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export type KontaktMeldingData = {
+  navn: string;
+  epost: string;
+  telefon?: string;
+  melding: string;
+};
+
+export function kontaktMeldingEmne(d: KontaktMeldingData): string {
+  return `Ny henvendelse fra ${d.navn} – Jossehallen`;
+}
+
+export function kontaktMeldingHtml(d: KontaktMeldingData): string {
+  const avsnitt = esc(d.melding)
+    .split("\n")
+    .filter(Boolean)
+    .map((p) => `<p style="font-size:15px;margin:0 0 12px">${p}</p>`)
+    .join("");
+  return `<!doctype html>
+<html lang="nb"><body style="margin:0;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#111">
+  <div style="max-width:560px;margin:0 auto;padding:24px">
+    <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #eee">
+      <p style="font-weight:800;letter-spacing:1px;color:${BRAND};margin:0 0 4px">JOSSEHALLEN</p>
+      <p style="font-size:13px;color:#666;margin:0 0 16px">Ny henvendelse via kontaktskjemaet</p>
+      <table style="font-size:14px;margin:0 0 16px">
+        <tr><td style="padding:2px 12px 2px 0;color:#666">Navn</td><td>${esc(d.navn)}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;color:#666">E-post</td><td>${esc(d.epost)}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;color:#666">Telefon</td><td>${d.telefon ? esc(d.telefon) : "–"}</td></tr>
+      </table>
+      <hr style="border:none;border-top:1px solid #eee;margin:0 0 16px">
+      ${avsnitt}
+    </div>
+  </div>
+</body></html>`;
+}
