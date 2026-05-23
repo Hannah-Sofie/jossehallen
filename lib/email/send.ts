@@ -7,14 +7,18 @@ import {
   kursPaaminnelseHtml,
   bookingPaaminnelseHtml,
   massEpostHtml,
+  kontaktMeldingHtml,
+  kontaktMeldingEmne,
   type KursBekreftelseData,
   type BookingBekreftelseData,
   type KursPaaminnelseData,
   type BookingPaaminnelseData,
+  type KontaktMeldingData,
 } from "@/lib/email/templates";
 
 const apiKey = process.env.RESEND_API_KEY;
 const fra = process.env.EMAIL_FROM || "Jossehallen <onboarding@resend.dev>";
+const kontaktTil = process.env.KONTAKT_EPOST || "jossehallen@hundehall.no";
 
 const resend = apiKey ? new Resend(apiKey) : null;
 
@@ -110,6 +114,37 @@ export async function sendBookingPaaminnelse(
     if (error) return { sendt: false, feil: error.message };
     return { sendt: true };
   } catch (e) {
+    return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
+  }
+}
+
+/**
+ * Sender en henvendelse fra kontaktskjemaet til hallen.
+ * Til forskjell fra bekreftelsene er denne ikke "fire-and-forget":
+ * meldingen lagres ikke noe sted, så kalleren bør vise feil hvis sending mislykkes.
+ */
+export async function sendKontaktMelding(
+  data: KontaktMeldingData,
+): Promise<SendResultat> {
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY mangler — kontaktmelding ikke sendt");
+    return { sendt: false, feil: "ikke konfigurert" };
+  }
+  try {
+    const { error } = await resend.emails.send({
+      from: fra,
+      to: kontaktTil,
+      replyTo: data.epost,
+      subject: kontaktMeldingEmne(data),
+      html: kontaktMeldingHtml(data),
+    });
+    if (error) {
+      console.error("[email] Resend-feil:", error);
+      return { sendt: false, feil: error.message };
+    }
+    return { sendt: true };
+  } catch (e) {
+    console.error("[email] Uventet feil:", e);
     return { sendt: false, feil: e instanceof Error ? e.message : "ukjent" };
   }
 }
