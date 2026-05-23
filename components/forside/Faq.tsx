@@ -35,16 +35,27 @@ const faq = [
 
 export function Faq() {
   return (
-    <section className="border-t">
+    <section className="border-t bg-muted/40">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
-        <h2 className="text-center font-brand text-3xl font-bold tracking-tight sm:text-4xl">
-          Ofte stilte spørsmål
-        </h2>
-        <Accordion className="mt-10">
+        <div className="text-center">
+          <p className="font-medium text-primary">Spørsmål og svar</p>
+          <h2 className="mt-2 font-brand text-3xl font-bold tracking-tight sm:text-4xl">
+            Ofte stilte spørsmål
+          </h2>
+        </div>
+        <Accordion className="mt-10 space-y-3">
           {faq.map((f, i) => (
-            <AccordionItem key={i} value={`q${i}`}>
-              <AccordionTrigger>{f.sp}</AccordionTrigger>
-              <AccordionContent>{f.sv}</AccordionContent>
+            <AccordionItem
+              key={i}
+              value={`q${i}`}
+              className="rounded-2xl border bg-card px-5 shadow-sm transition-colors hover:border-primary/40 has-[[aria-expanded=true]]:border-primary/50"
+            >
+              <AccordionTrigger className="py-4 text-base font-medium hover:no-underline aria-expanded:text-primary">
+                {f.sp}
+              </AccordionTrigger>
+              <AccordionContent className="text-base leading-relaxed text-muted-foreground">
+                {f.sv}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>

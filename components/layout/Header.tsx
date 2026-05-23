@@ -100,7 +100,7 @@ export function Header({ bruker }: { bruker: HeaderBruker }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur transition-shadow",
+        "sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur transition-shadow",
         scrolled && "shadow-md",
       )}
     >

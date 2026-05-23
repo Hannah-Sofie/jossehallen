@@ -18,26 +18,23 @@ import { BildeFallback } from "@/components/BildeFallback";
 import { PameldingDialog } from "@/components/kurs/PameldingDialog";
 
 export function KursKort({ kurs }: { kurs: KursOffentlig }) {
-  const status = plassStatus(kurs.ledige_plasser);
+  const status = plassStatus(kurs.ledige_plasser, kurs.maks_deltakere);
 
   return (
-    <Card className="group flex flex-col overflow-hidden pt-0 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <Card className="flex flex-col overflow-hidden pt-0">
       <div className="relative aspect-video w-full overflow-hidden">
         {kurs.bilde_url ? (
           <Image
             src={kurs.bilde_url}
             alt={kurs.navn}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
           <BildeFallback />
         )}
-        <Badge
-          variant={status.variant}
-          className="absolute right-3 top-3 shadow-sm"
-        >
+        <Badge className={`${status.badgeClass} absolute right-3 top-3 shadow-sm`}>
           {status.label}
         </Badge>
       </div>
