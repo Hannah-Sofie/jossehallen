@@ -14,23 +14,26 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { BildeFallback } from "@/components/BildeFallback";
 import { PameldingDialog } from "@/components/kurs/PameldingDialog";
 
 export function KursKort({ kurs }: { kurs: KursOffentlig }) {
   const status = plassStatus(kurs.ledige_plasser);
 
   return (
-    <Card className="flex flex-col overflow-hidden pt-0">
-      <div className="relative aspect-video w-full bg-gradient-to-br from-muted to-muted-foreground/20">
+    <Card className="group flex flex-col overflow-hidden pt-0 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative aspect-video w-full overflow-hidden">
         {kurs.bilde_url ? (
           <Image
             src={kurs.bilde_url}
             alt={kurs.navn}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
-        ) : null}
+        ) : (
+          <BildeFallback />
+        )}
         <Badge
           variant={status.variant}
           className="absolute right-3 top-3 shadow-sm"
@@ -43,7 +46,14 @@ export function KursKort({ kurs }: { kurs: KursOffentlig }) {
         <div className="flex items-center gap-2">
           <Badge variant="secondary">{nivaaLabel(kurs.nivaa)}</Badge>
         </div>
-        <CardTitle className="mt-1">{kurs.navn}</CardTitle>
+        <CardTitle className="mt-1">
+          <Link
+            href={`/kurs/${kurs.id}`}
+            className="transition-colors hover:text-primary"
+          >
+            {kurs.navn}
+          </Link>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="flex-1 space-y-2 text-sm text-muted-foreground">

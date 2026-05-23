@@ -14,6 +14,7 @@ import {
 import { formatPeriode, formatPris, formatDato } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BildeFallback } from "@/components/BildeFallback";
 import { PameldingDialog } from "@/components/kurs/PameldingDialog";
 
 type Params = { params: Promise<{ id: string }> };
@@ -92,7 +93,7 @@ export default async function KursDetalj({ params }: Params) {
       </nav>
 
       {/* Hero */}
-      <div className="relative mt-6 aspect-[2/1] w-full overflow-hidden rounded-xl bg-gradient-to-br from-muted to-muted-foreground/20">
+      <div className="relative mt-6 aspect-[2/1] w-full overflow-hidden rounded-xl">
         {kurs.bilde_url ? (
           <Image
             src={kurs.bilde_url}
@@ -102,7 +103,9 @@ export default async function KursDetalj({ params }: Params) {
             sizes="(max-width: 896px) 100vw, 896px"
             priority
           />
-        ) : null}
+        ) : (
+          <BildeFallback iconClassName="max-h-28 max-w-28" />
+        )}
         <Badge variant={status.variant} className="absolute right-4 top-4 shadow-sm">
           {status.label}
         </Badge>
