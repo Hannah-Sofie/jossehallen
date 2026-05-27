@@ -158,7 +158,7 @@ export function RegistrerForm() {
             name="postnummer"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Postnr.</FormLabel>
+                <FormLabel>Postnr. (valgfritt)</FormLabel>
                 <FormControl>
                   <Input inputMode="numeric" maxLength={4} autoComplete="postal-code" {...field} />
                 </FormControl>
