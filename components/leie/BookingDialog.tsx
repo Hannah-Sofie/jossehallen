@@ -98,8 +98,7 @@ export function BookingDialog({
                 Booking registrert
               </DialogTitle>
               <DialogDescription>
-                {tidLabel}. Du har fått en bekreftelse på e-post. PIN-kode til
-                døren vises på Min side rundt booking-tidspunktet.
+                {tidLabel}. Du har fått en bekreftelse på e-post.
               </DialogDescription>
             </DialogHeader>
             <BetalingsInfo info={betaling} />
