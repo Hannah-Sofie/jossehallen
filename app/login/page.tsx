@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { hentBruker } from "@/lib/auth";
 import { redirect } from "next/navigation";
+
+import { hentBruker } from "@/lib/auth";
+import { AuthKort } from "@/components/auth/AuthKort";
 import { LoginForm } from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
@@ -17,14 +19,13 @@ export default async function LoginPage({
   if (await hentBruker()) redirect(retur || "/min-side");
 
   return (
-    <div className="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Logg inn</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Logg inn for å melde på kurs raskere og booke halltid.
-      </p>
-      <div className="mt-8">
-        <LoginForm retur={retur} />
-      </div>
-    </div>
+    <AuthKort
+      brandTittel="Velkommen tilbake!"
+      brandTekst="Logg inn for å melde på kurs raskere og booke halltid i hallen."
+      tittel="Logg inn"
+      beskrivelse="Logg inn for å melde på kurs raskere og booke halltid."
+    >
+      <LoginForm retur={retur} />
+    </AuthKort>
   );
 }
